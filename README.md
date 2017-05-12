@@ -42,7 +42,7 @@ from source when the kernel is upgraded (for example using your package manager)
 that it can used to rebuild the module on kernel upgrades.
 
     ```shell
-    $ dkms add .
+    $ dkms add ./rtl8192eu-linux-driver
     ```
 
 3. Build and install the driver.
@@ -50,10 +50,15 @@ that it can used to rebuild the module on kernel upgrades.
     ```shell
     $ dkms install rtl8192eu/1.0
     ```
-
+4. Check that your kernel has loaded the right module:
+ ```shell
+    $ lshw -c network
+    ```
+    You should see the line ```driver=8192eu```
+    
 If you wish to uninstall the driver at a later point, use
 _dkms uninstall rtl8192eu/1.0_. To completely remove the driver from DKMS use
-_dkms remove rtl8192eu/1.0_.
+_dkms remove rtl8192eu/1.0 --all_
 
 ## Submitting patches
 
