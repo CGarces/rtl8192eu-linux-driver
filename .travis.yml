@@ -3,13 +3,24 @@ compiler: gcc
 sudo: required
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install linux-headers-$(uname -r) dkms
+#  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+#  - sudo apt-get -qq update
+#  - sudo apt-get install $COMPILER dkms
+  - wget -c kernel.ubuntu.com/~kernel-ppa/mainline/v$(echo $KVER | cut -d'-' -f1)/linux-headers-${KVER}-generic_${KVER}.${KVER_TS}_amd64.deb
+  - wget -c kernel.ubuntu.com/~kernel-ppa/mainline/v$(echo $KVER | cut -d'-' -f1)/linux-headers-${KVER}_${KVER}.${KVER_TS}_all.deb
+  - sudo dpkg -i *.deb
+
+#env:
+#  matrix:
+#  - COMPILER=gcc-5 KVER=4.13.1-041301 KVER_TS=201709100232
+#  - COMPILER=gcc-4.9 KVER=4.13.1-041301 KVER_TS=201709100232
+#  - COMPILER=gcc-5 KVER=4.4.87-040487 KVER_TS=201709070334
+#  #- COMPILER=gcc-5 KVER=3.16.0-77-generic
+#  - COMPILER=gcc-4.9 KVER=3.16.47-031647 KVER_TS=201708260658
 
 script:
-  - dpkg --list | grep linux-image
   - gcc --version
-  - make CC=$COMPILER
+  - make CC=$COMPILER KVER=$KVER-generic
 
 matrix:
   include:
@@ -20,7 +31,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - gcc-5
-      env: COMPILER=gcc-5
+      env: COMPILER=gcc-5 KVER=4.13.1-041301 KVER_TS=201709100232
     - compiler: gcc
       addons:
         apt:
@@ -28,4 +39,21 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - gcc-4.9
-      env: COMPILER=gcc-4.9
+      env: COMPILER=gcc-4.9 KVER=4.13.1-041301 KVER_TS=201709100232      
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+      env: COMPILER=gcc-5 KVER=4.4.87-040487 KVER_TS=201709070334      
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-4.9
+      env: COMPILER=gcc-4.9 KVER=3.16.47-031647 KVER_TS=201708260658      
+      
