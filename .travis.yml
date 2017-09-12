@@ -3,12 +3,29 @@ compiler: gcc
 sudo: required
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install linux-headers-$(uname -r) dkms
+#  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+#  - sudo apt-get -qq update
+#  - sudo apt-get install $COMPILER dkms
+  - wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v$(echo $KVER | cut -d'-' -f1)/$(wget --quiet -O - http://kernel.ubuntu.com/~kernel-ppa/mainline/v$(echo $KVER | cut -d'-' -f1)/ | grep -o 'href=".*"' | grep headers | grep generic | grep -m1 amd64 | cut -d '"' -f 2)
+  - wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v$(echo $KVER | cut -d'-' -f1)/$(wget --quiet -O - http://kernel.ubuntu.com/~kernel-ppa/mainline/v$(echo $KVER | cut -d'-' -f1)/ | grep -o 'href=".*"' | grep -m1 all | cut -d '"' -f 2)
+  - sudo dpkg -i *.deb
+
+#env:
+#  matrix:
+#  - COMPILER=gcc-5 KVER=4.13.1-041301 KVER_TS=201709100232
+#  - COMPILER=gcc-4.9 KVER=4.13.1-041301 KVER_TS=201709100232
+#  - COMPILER=gcc-5 KVER=4.4.87-040487 KVER_TS=201709070334
+#  #- COMPILER=gcc-5 KVER=3.16.0-77-generic
+#  - COMPILER=gcc-4.9 KVER=3.16.47-031647 KVER_TS=201708260658
 
 script:
   - gcc --version
-  - make CC=$COMPILER
+  - make CC=$COMPILER KVER=$KVER-generic
+
+#addons:
+#  apt:
+#    packages: &base_build
+#      - lynx
 
 matrix:
   include:
@@ -19,12 +36,33 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - gcc-5
-      env: COMPILER=gcc-5
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - gcc-4.9
-      env: COMPILER=gcc-4.9
+      env: COMPILER=gcc-5 KVER=4.13.1-041301
+#    - compiler: gcc
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - *base_build
+#            - gcc-6
+#      env: COMPILER=gcc-6 KVER=4.13.1-041301
+#    - compiler: gcc
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - *base_build
+#            - gcc-5
+#      env: COMPILER=gcc-5 KVER=4.4.87-040487
+#    - compiler: gcc
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - *base_build
+#            - gcc-4.9
+#      env: COMPILER=gcc-4.9 KVER=3.16.47-031647
+#      
+#
