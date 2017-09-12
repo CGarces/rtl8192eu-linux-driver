@@ -38,8 +38,8 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-4.9
-      env: COMPILER=gcc-4.9 KVER=4.13.1-041301 KVER_TS=201709100232      
+            - gcc-6
+      env: COMPILER=gcc-6 KVER=4.13.1-041301 KVER_TS=201709100232      
     - compiler: gcc
       addons:
         apt:
