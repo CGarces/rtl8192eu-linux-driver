@@ -27,7 +27,7 @@ matrix:
           packages:
             - gcc-5
             - libelf-dev
-      env: COMPILER=gcc-5 KVER=4.15-rc6
+      env: COMPILER=gcc-5 KVER=4.15.4
     - compiler: gcc
       addons:
         apt:
@@ -36,7 +36,7 @@ matrix:
           packages:
             - gcc-6
             - libelf-dev
-      env: COMPILER=gcc-6 KVER=4.15-rc6
+      env: COMPILER=gcc-6 KVER=4.15.4
     - compiler: gcc
       addons:
         apt:
@@ -45,7 +45,7 @@ matrix:
           packages:
             - gcc-7
             - libelf-dev
-      env: COMPILER=gcc-7 KVER=4.15-rc6
+      env: COMPILER=gcc-7 KVER=4.15.4
     - compiler: gcc
       addons:
         apt:
