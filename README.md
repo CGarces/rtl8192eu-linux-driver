@@ -1,6 +1,10 @@
 # rtl8192eu linux drivers
 
+<<<<<<< HEAD
 **NOTE:** This branch is based on Realtek's driver versioned 4.4.1. `master` is based on 4.3.1.1 originally.
+=======
+**NOTE:** The `master` branch is based on Realtek's driver versioned 4.3.1.1. The branch `realtek-4.4.x` is based on 4.4.1 originally.
+>>>>>>> upstream/master
 
 The official drivers for D-Link DWA-131 Rev E, with patches to keep it working on newer kernels.
 Also works on Rosewill RNX-N180UBE v2 N300 Wireless Adapter.
@@ -34,6 +38,7 @@ from source when the kernel is upgraded (for example using your package manager)
 
 1. Install DKMS and other required tools
 
+<<<<<<< HEAD
     * for normal Linux systems
 
     ```shell
@@ -44,18 +49,27 @@ from source when the kernel is upgraded (for example using your package manager)
 
     ```shell
     $ sudo apt-get install git raspberrypi-kernel-headers build-essential dkms
+=======
+    ```shell
+    $ apt-get install git linux-headers-generic build-essential dkms
+>>>>>>> upstream/master
     ```
 
 2. Add the driver to DKMS. This will copy the source to a system directory so
 that it can used to rebuild the module on kernel upgrades.
 
     ```shell
+<<<<<<< HEAD
     $ sudo dkms add .
+=======
+    $ dkms add .
+>>>>>>> upstream/master
     ```
 
 3. Build and install the driver.
 
     ```shell
+<<<<<<< HEAD
     $ sudo dkms install rtl8192eu/1.0
     ```
 
@@ -87,6 +101,14 @@ You should see the line ```driver=8192eu```
 If you wish to uninstall the driver at a later point, use
 _sudo dkms uninstall rtl8192eu/1.0_. To completely remove the driver from DKMS use
 _sudo dkms remove rtl8192eu/1.0 --all_.
+=======
+    $ dkms install rtl8192eu/1.0
+    ```
+
+If you wish to uninstall the driver at a later point, use
+_dkms uninstall rtl8192eu/1.0_. To completely remove the driver from DKMS use
+_dkms remove rtl8192eu/1.0_.
+>>>>>>> upstream/master
 
 ## Submitting patches
 
