@@ -22,6 +22,14 @@
 #ifndef __DRV_TYPES_H__
 #define __DRV_TYPES_H__
 
+/* In Linux 5.4 asm_inline was introduced.
+ * Redefine it to just asm to enable successful compilation.
+ */
+#ifdef asm_inline
+#undef asm_inline
+#define asm_inline asm
+#endif
+
 #include <drv_conf.h>
 #include <basic_types.h>
 #include <osdep_service.h>

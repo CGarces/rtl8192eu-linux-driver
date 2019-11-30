@@ -14,6 +14,7 @@
  *****************************************************************************/
 #define _RTW_BR_EXT_C_
 
+#include <drv_types.h>
 #ifdef __KERNEL__
 	#include <linux/if_arp.h>
 	#include <net/ip.h>
@@ -22,21 +23,6 @@
 	#include <linux/udp.h>
 	#include <linux/if_pppox.h>
 #endif
-
-#if 1	/* rtw_wifi_driver */
-	#include <drv_types.h>
-#else	/* rtw_wifi_driver */
-	#include "./8192cd_cfg.h"
-
-	#ifndef __KERNEL__
-		#include "./sys-support.h"
-	#endif
-
-	#include "./8192cd.h"
-	#include "./8192cd_headers.h"
-	#include "./8192cd_br_ext.h"
-	#include "./8192cd_debug.h"
-#endif /* rtw_wifi_driver */
 
 #ifdef CL_IPV6_PASS
 	#ifdef __KERNEL__
