@@ -7,10 +7,9 @@ before_install:
   - export KERNEL_URL_DETAILS=$(wget --quiet -O - ${KERNEL_URL}v${KVER}/ | grep -A8 'Build for amd64')
   - export ALL_DEB=$(echo "$KERNEL_URL_DETAILS" |  grep -m1 'all.deb' | cut -d '"' -f 2)
   - KVER=$(echo $ALL_DEB | cut -d '_' -f 1 | cut -c15-)-generic
-  - wget ${KERNEL_URL}v${KVER}/$(echo "$KERNEL_URL_DETAILS" | grep -m1 'amd64.deb' | cut -d '"' -f 2)
-  - wget ${KERNEL_URL}v${KVER}/$ALL_DEB
+  - wget ${KERNEL_URL}v${KVER_BUILD}/$(echo "$KERNEL_URL_DETAILS" | grep -m1 'amd64.deb' | cut -d '"' -f 2)
+  - wget ${KERNEL_URL}v${KVER_BUILD}/$ALL_DEB
   - sudo dpkg -i *.deb
-
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
@@ -25,10 +24,10 @@ jobs:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - gcc-9
-      env: CC=gcc-9 KVER=$KERNEL_MAINLINE
+      env: CC=gcc-9 KVER_BUILD=$KERNEL_MAINLINE
     - compiler: gcc
       addons:
         apt:
           packages:
             - gcc-8
-      env: CC=gcc-8 KVER=$KERNEL_MAINLINE
+      env: CC=gcc-8 KVER_BUILD=$KERNEL_MAINLINE
