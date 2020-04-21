@@ -19,6 +19,9 @@ env:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
     - KERNEL_MAINLINE="$(curl -s https://www.kernel.org/ | grep -A1 'mainline:' | grep -oP '(?<=strong>).*(?=</strong.*)')"
 
+cache:
+  - ccache: true
+  
 jobs:
   include:
     - compiler: gcc
