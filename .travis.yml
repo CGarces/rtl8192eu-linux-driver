@@ -13,7 +13,7 @@ before_install:
   - sudo dpkg -i *.deb
 
 script:
-  - make KVER=$KVER
+  - make CC=$CC KVER=$KVER
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
