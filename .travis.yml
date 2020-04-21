@@ -10,6 +10,9 @@ before_install:
   - wget ${KERNEL_URL}v${KVER_BUILD}/$(echo "$KERNEL_URL_DETAILS" | grep -m1 'amd64.deb' | cut -d '"' -f 2)
   - wget ${KERNEL_URL}v${KVER_BUILD}/$ALL_DEB
   - sudo dpkg -i *.deb
+
+script:
+  - make
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
