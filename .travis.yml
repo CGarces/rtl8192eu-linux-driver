@@ -4,6 +4,7 @@ dist: bionic
 os: linux
 
 before_install:
+  - eval "${MATRIX_EVAL}"
   - export KERNEL_URL_DETAILS=$(wget --quiet -O - ${KERNEL_URL}v${KVER_BUILD}/ | grep -A8 'Build for amd64')
   - export ALL_DEB=$(echo "$KERNEL_URL_DETAILS" |  grep -m1 'all.deb' | cut -d '"' -f 2)
   - export KVER=$(echo $ALL_DEB | cut -d '_' -f 1 | cut -c15-)-generic
@@ -12,7 +13,6 @@ before_install:
   - sudo dpkg -i *.deb
 
 script:
-  - echo KVER=$KVER
   - make KVER=$KVER
 env:
   global:
@@ -28,10 +28,10 @@ jobs:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - gcc-9
-      env: CC=gcc-9 KVER_BUILD=$KERNEL_MAINLINE
+      env: MATRIX_EVAL="CC=gcc-9" KVER_BUILD=$KERNEL_MAINLINE
     - compiler: gcc
       addons:
         apt:
           packages:
             - gcc-8
-      env: CC=gcc-8 KVER_BUILD=$KERNEL_MAINLINE
+      env: MATRIX_EVAL="CC=gcc-8" KVER_BUILD=$KERNEL_MAINLINE
