@@ -21,25 +21,16 @@ env:
 cache:
   - ccache: true
 
-stages:
-  - prepare cache
-  - test_kernel
-  
 jobs:
   include:
-    - stage: prepare cache
-      script: true
-      before_install: true
-    - stage: test_kernel
-      addons:
+    - addons:
         apt:
           sources:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - gcc-9
       env: CC=gcc-9 KVER_BUILD=$KERNEL_MAINLINE
-    - stage: test_kernel
-      addons:
+    - addons:
         apt:
           packages:
             - gcc-8
