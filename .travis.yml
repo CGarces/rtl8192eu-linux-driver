@@ -15,18 +15,21 @@ before_install:
 
 script: true #make CC=$CC KVER=$KVER
 
+addons:
+  apt:
+    packages:
+        #Kernels >= 5.4 No longer builds on gcc-7.4 So excluded from build matrix and will handle on "include array". should be fixed by gcc-7.5 
+      - gcc-7
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
     - KERNEL_MAINLINE="$(curl -s https://www.kernel.org/ | grep -A1 'mainline:' | grep -oP '(?<=strong>).*(?=</strong.*)')"
 
   matrix:
- #  - KVER_BUILD=$KERNEL_MAINLINE
- #  - KVER_BUILD=5.6.5
- #  - KVER_BUILD=5.5.18
- #Mainline kernel is compiled on GCC 9 also. Handled on "include"
- #Kernels >= 5.4 No longer builds on gcc-7.4 So excluded from build matrix and will handle on "include array". should be fixed by gcc-7.5 
- #LTS Kernels < 5.4 use GCC instaled on Travis instance, so no apt is required, the are populated by the build matrix.
+ #Mainline kernel is compiled on GCC 8 & 9. Handled on "include"
+    - KVER_BUILD=$KERNEL_MAINLINE
+    - KVER_BUILD=5.6.5
+    - KVER_BUILD=5.5.18
  #Kernels 5.4 with minor versions > 27 are failing on amd64. Not upgrade the minor version without check https://kernel.ubuntu.com/~kernel-ppa/mainline/ 
     - KVER_BUILD=5.4.27
     - KVER_BUILD=4.19.116
@@ -50,19 +53,3 @@ jobs:
           packages:
             - gcc-8
       env: CC=gcc-8 KVER_BUILD=$KERNEL_MAINLINE
-
-    - addons:
-        apt:
-          packages:
-            - gcc-8
-      env: CC=gcc-8 KVER_BUILD=5.6.5
-    - addons:
-        apt:
-          packages:
-            - gcc-8
-      env: CC=gcc-8 KVER_BUILD=5.5.18
-    - addons:
-        apt:
-          packages:
-            - gcc-8
-      env: CC=gcc-8 KVER_BUILD=5.4.27
