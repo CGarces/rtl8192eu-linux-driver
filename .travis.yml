@@ -4,34 +4,33 @@ dist: bionic
 os: linux
 
 before_install:
-  #Cron builds only test mainline kernel, stable ans LTS kernels usualy not have breaking changes.
-  - if ["$TRAVIS_EVENT_TYPE" = "cron" && "$KVER_BUILD" != "$KERNEL_MAINLINE"]; then exit 0; fi
+  #Cron builds only build mainline kernel. Stable and LTS kernels usually not have breaking changes.
+  - if [ "$TRAVIS_EVENT_TYPE" == "cron" ] && [ "$KVER_BUILD" != "$KERNEL_MAINLINE" ]; then exit 0; fi
   - export KERNEL_URL_DETAILS=$(wget --quiet -O - ${KERNEL_URL}v${KVER_BUILD}/ | grep -A8 "Build for ${TRAVIS_CPU_ARCH}")
   - export ALL_DEB=$(echo "$KERNEL_URL_DETAILS" |  grep -m1 'all.deb' | cut -d '"' -f 2)
   - export KVER=$(echo $ALL_DEB | cut -d '_' -f 1 | cut -c15-)-generic
   - wget ${KERNEL_URL}v${KVER_BUILD}/$(echo "$KERNEL_URL_DETAILS" | grep -m1 "${TRAVIS_CPU_ARCH}.deb" | cut -d '"' -f 2)
   - wget ${KERNEL_URL}v${KVER_BUILD}/$ALL_DEB
-  #- sudo dpkg -i *.deb
+  - sudo dpkg -i *.deb
 
-script: true #make CC=$CC KVER=$KVER
+script: make CC=$CC KVER=$KVER
 
 addons:
   apt:
     packages:
-        #Kernels >= 5.4 No longer builds on gcc-7.4 So excluded from build matrix and will handle on "include array". should be fixed by gcc-7.5 
+      #Force update to GCC-7.5 in order to compile Kernels >= 5.4.
       - gcc-7
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
-    - KERNEL_MAINLINE="$(curl -s https://www.kernel.org/ | grep -A1 'mainline:' | grep -oP '(?<=strong>).*(?=</strong.*)')"
-
-  matrix:
- #Mainline kernel is compiled on GCC 8 & 9. Handled on "include"
+    - KERNEL_MAINLINE=$(curl -s https://www.kernel.org/releases.json | grep -B1 'mainline' | head -1 | cut -d'"' -f4)
+    - KERNEL_STABLE=$(curl -s https://www.kernel.org/releases.json | grep -A1 'latest_stable' | tail -1 | cut -d'"' -f4)
+  jobs:
     - KVER_BUILD=$KERNEL_MAINLINE
-    - KVER_BUILD=5.6.5
-    - KVER_BUILD=5.5.18
- #Kernels 5.4 with minor versions > 27 are failing on amd64. Not upgrade the minor version without check https://kernel.ubuntu.com/~kernel-ppa/mainline/ 
-    - KVER_BUILD=5.4.27
+    - KVER_BUILD=$KERNEL_STABLE
+    - KVER_BUILD=5.5.19 #EOL
+ #Kernels 5.4 with minor versions > 28 are failing on amd64. Not upgrade the minor version without check https://kernel.ubuntu.com/~kernel-ppa/mainline/ 
+    - KVER_BUILD=5.4.28
     - KVER_BUILD=4.19.116
     - KVER_BUILD=4.9.219
     - KVER_BUILD=4.4.219
@@ -40,6 +39,7 @@ cache:
   - ccache: true
 
 jobs:
+#Mainline kernel is also compiled on GCC 8 & 9. Jobs are added to the build matrix expansion
   include:
     - addons:
         apt:
