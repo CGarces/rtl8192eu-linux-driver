@@ -5,7 +5,7 @@ os: linux
 
 before_install:
   #Cron builds only test mainline kernel, stable ans LTS kernels usualy not have breaking changes.
-  - if ["$TRAVIS_EVENT_TYPE" == "cron" && "$KVER_BUILD" != "$KERNEL_MAINLINE"]; then exit 0; fi
+  - if ["$TRAVIS_EVENT_TYPE" = "cron" && "$KVER_BUILD" != "$KERNEL_MAINLINE"]; then exit 0; fi
   - export KERNEL_URL_DETAILS=$(wget --quiet -O - ${KERNEL_URL}v${KVER_BUILD}/ | grep -A8 "Build for ${TRAVIS_CPU_ARCH}")
   - export ALL_DEB=$(echo "$KERNEL_URL_DETAILS" |  grep -m1 'all.deb' | cut -d '"' -f 2)
   - export KVER=$(echo $ALL_DEB | cut -d '_' -f 1 | cut -c15-)-generic
