@@ -20,6 +20,7 @@ addons:
     packages:
       #Force update to GCC-7.5 in order to compile Kernels >= 5.4.
       - gcc-7
+
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
