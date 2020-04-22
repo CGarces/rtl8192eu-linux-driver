@@ -24,7 +24,7 @@ addons:
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
-    - KERNEL_MAINLINE=$(curl -s https://www.kernel.org/releases.json | grep -B1 'mainline' | head -1 | cut -d'"' -f4)
+    - KERNEL_MAINLINE=$(curl -s https://www.kernel.org/releases.json | grep 'mainline' -B1 | head -1 | cut -d'"' -f4)
     - KERNEL_STABLE=$(curl -s https://www.kernel.org/releases.json | grep -A1 'latest_stable' | tail -1 | cut -d'"' -f4)
   jobs:
     - KVER_BUILD=$KERNEL_MAINLINE
