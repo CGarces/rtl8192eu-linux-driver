@@ -4,8 +4,8 @@ dist: bionic
 os: linux
 
 before_install:
-  #On Cron build only mainline kernel is tested.
-  - if ! [$TRAVIS_EVENT_TYPE==cron]; then exit 0; fi
+  #Cron builds only test mainline kernel, stable ans LTS kernels usualy not have breaking changes.
+  - if ["$TRAVIS_EVENT_TYPE" == "cron"] && ["$KVER_BUILD" != "$KERNEL_MAINLINE"]; then exit 0; fi
   - export KERNEL_URL_DETAILS=$(wget --quiet -O - ${KERNEL_URL}v${KVER_BUILD}/ | grep -A8 "Build for ${TRAVIS_CPU_ARCH}")
   - export ALL_DEB=$(echo "$KERNEL_URL_DETAILS" |  grep -m1 'all.deb' | cut -d '"' -f 2)
   - export KVER=$(echo $ALL_DEB | cut -d '_' -f 1 | cut -c15-)-generic
@@ -24,8 +24,8 @@ env:
  #  - KVER_BUILD=$KERNEL_MAINLINE
  #  - KVER_BUILD=5.6.5
  #  - KVER_BUILD=5.5.18
+ #Mainline kernel is compiled on GCC 9 also. Handled on "include"
  #Kernels >= 5.4 No longer builds on gcc-7.4 So excluded from build matrix and will handle on "include array". should be fixed by gcc-7.5 
- #Mainline kernel is compiled on GCC 9 also.
  #LTS Kernels < 5.4 use GCC instaled on Travis instance, so no apt is required, the are populated by the build matrix.
  #Kernels 5.4 with minor versions > 27 are failing on amd64. Not upgrade the minor version without check https://kernel.ubuntu.com/~kernel-ppa/mainline/ 
     - KVER_BUILD=5.4.27
