@@ -2,6 +2,7 @@ language: c
 compiler: gcc
 dist: bionic
 os: linux
+arch: arm64
 
 before_install:
   #Cron builds only build mainline kernel. Stable and LTS kernels usually not have breaking changes.
@@ -13,13 +14,14 @@ before_install:
   - wget ${KERNEL_URL}v${KVER_BUILD}/$ALL_DEB
   - sudo dpkg -i *.deb
 
-script: make CC=$CC KVER=$KVER
+script: make V=1 CC=$CC KVER=$KVER CONFIG_PLATFORM_ARM_AARCH64=y CONFIG_PLATFORM_I386_PC=n CONFIG_MP_VHT_HW_TX_MODE=n
 
 addons:
   apt:
     packages:
       #Force update to GCC-7.5 in order to compile Kernels >= 5.4.
       - gcc-7
+      - bc
 env:
   global:
     - KERNEL_URL=https://kernel.ubuntu.com/~kernel-ppa/mainline/
@@ -28,28 +30,4 @@ env:
   jobs:
     - KVER_BUILD=$KERNEL_MAINLINE
     - KVER_BUILD=$KERNEL_STABLE
-    - KVER_BUILD=5.5.19 #EOL
- #Kernels 5.4 with minor versions > 28 are failing on amd64. Not upgrade the minor version without check https://kernel.ubuntu.com/~kernel-ppa/mainline/ 
-    - KVER_BUILD=5.4.28
-    - KVER_BUILD=4.19.116
-    - KVER_BUILD=4.9.219
-    - KVER_BUILD=4.4.219
-    - KVER_BUILD=3.16.82
-cache:
-  - ccache: true
-
-jobs:
-#Mainline kernel is also compiled on GCC 8 & 9. Jobs are added to the build matrix expansion
-  include:
-    - addons:
-        apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"
-          packages:
-            - gcc-9
-      env: CC=gcc-9 KVER_BUILD=$KERNEL_MAINLINE
-    - addons:
-        apt:
-          packages:
-            - gcc-8
-      env: CC=gcc-8 KVER_BUILD=$KERNEL_MAINLINE
+    - KVER_BUILD=4.9.224
