@@ -996,25 +996,25 @@ bool rtw_mlme_band_check(_adapter *adapter, const u32 ch)
 }
 inline void RTW_SET_SCAN_BAND_SKIP(_adapter *padapter, int skip_band)
 {
-	int bs = ATOMIC_READ(&padapter->bandskip);
+	int bs = atomic_read(&padapter->bandskip);
 
 	bs |= skip_band;
-	ATOMIC_SET(&padapter->bandskip, bs);
+	atomic_set(&padapter->bandskip, bs);
 }
 
 inline void RTW_CLR_SCAN_BAND_SKIP(_adapter *padapter, int skip_band)
 {
-	int bs = ATOMIC_READ(&padapter->bandskip);
+	int bs = atomic_read(&padapter->bandskip);
 
 	bs &= ~(skip_band);
-	ATOMIC_SET(&padapter->bandskip, bs);
+	atomic_set(&padapter->bandskip, bs);
 }
 inline int RTW_GET_SCAN_BAND_SKIP(_adapter *padapter)
 {
-	return ATOMIC_READ(&padapter->bandskip);
+	return atomic_read(&padapter->bandskip);
 }
 
-#define RTW_IS_SCAN_BAND_SKIP(padapter, skip_band) (ATOMIC_READ(&padapter->bandskip) & (skip_band))
+#define RTW_IS_SCAN_BAND_SKIP(padapter, skip_band) (atomic_read(&padapter->bandskip) & (skip_band))
 
 bool rtw_mlme_ignore_chan(_adapter *adapter, const u32 ch)
 {
@@ -1102,7 +1102,7 @@ static void init_mlme_ext_priv_value(_adapter *padapter)
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 
-	ATOMIC_SET(&pmlmeext->event_seq, 0);
+	atomic_set(&pmlmeext->event_seq, 0);
 	pmlmeext->mgnt_seq = 0;/* reset to zero when disconnect at client mode */
 #ifdef CONFIG_IEEE80211W
 	pmlmeext->sa_query_seq = 0;
@@ -1893,8 +1893,8 @@ static void rtw_check_legacy_ap(_adapter *padapter, u8 *pframe, u32 len)
 			if (0)
 				RTW_INFO("%s: "MAC_FMT" is legacy ap\n", __func__, MAC_ARG(GetAddr3Ptr(pframe)));
 
-			ATOMIC_SET(&pmlmepriv->olbc, _TRUE);
-			ATOMIC_SET(&pmlmepriv->olbc_ht, _TRUE);
+			atomic_set(&pmlmepriv->olbc, _TRUE);
+			atomic_set(&pmlmepriv->olbc_ht, _TRUE);
 		}
 	}
 }
@@ -2052,7 +2052,7 @@ unsigned int OnBeacon(_adapter *padapter, union recv_frame *precv_frame)
 #ifdef CONFIG_TDLS_CH_SW
 				if (rtw_tdls_is_chsw_allowed(padapter) == _TRUE) {
 					/* Send TDLS Channel Switch Request when receiving Beacon */
-					if ((padapter->tdlsinfo.chsw_info.ch_sw_state & TDLS_CH_SW_INITIATOR_STATE) && (ATOMIC_READ(&pchsw_info->chsw_on) == _TRUE)
+					if ((padapter->tdlsinfo.chsw_info.ch_sw_state & TDLS_CH_SW_INITIATOR_STATE) && (atomic_read(&pchsw_info->chsw_on) == _TRUE)
 					    && (pmlmeext->cur_channel == rtw_get_oper_ch(padapter))) {
 						ptdls_sta = rtw_get_stainfo(&padapter->stapriv, padapter->tdlsinfo.chsw_info.addr);
 						if (ptdls_sta != NULL) {
@@ -7132,10 +7132,10 @@ unsigned int OnAction_tbtx_token(_adapter *padapter, union recv_frame *precv_fra
 			// parse duration
 			tx_duration = le32_to_cpu(*(uint *)(pframe + WLAN_HDR_A3_LEN + 2));
 			padapter->tbtx_duration = tx_duration/1000; // Mirocsecond to Millisecond
-			ATOMIC_SET(&padapter->tbtx_tx_pause, _FALSE);
+			atomic_set(&padapter->tbtx_tx_pause, _FALSE);
 			rtw_tx_control_cmd(padapter);
 			_set_timer(&pmlmeext->tbtx_xmit_timer, padapter->tbtx_duration);
-			ATOMIC_SET(&padapter->tbtx_remove_tx_pause, _FALSE);
+			atomic_set(&padapter->tbtx_remove_tx_pause, _FALSE);
 #if defined(CONFIG_SDIO_HCI) && !defined(CONFIG_SDIO_TX_TASKLET)
 			_rtw_up_sema(&pxmitpriv->SdioXmitSema);
 #else
@@ -7151,19 +7151,19 @@ unsigned int OnAction_tbtx_token(_adapter *padapter, union recv_frame *precv_fra
 			if (!psta)
 				goto exit;
 
-			if (ATOMIC_READ(&pstapriv->nr_token_keeper) < 1)
+			if (atomic_read(&pstapriv->nr_token_keeper) < 1)
 				goto exit;
 
 			for (i=0; i< NR_MAXSTA_INSLOT; i++) {
 				if (pstapriv->token_holder[i] == psta) {
 					pstapriv->token_holder[i] = NULL;
 					//RTW_INFO("macaddr1:" MAC_FMT "\n", MAC_ARG(psta->cmn.mac_addr));
-					ATOMIC_DEC(&pstapriv->nr_token_keeper);
+					atomic_dec(&pstapriv->nr_token_keeper);
 					break;
 				}
 			}
 
-			if (ATOMIC_READ(&pstapriv->nr_token_keeper) == 0)
+			if (atomic_read(&pstapriv->nr_token_keeper) == 0)
 				_set_timer(&pmlmeext->tbtx_token_dispatch_timer, 1);
 
 			break;
@@ -11439,7 +11439,7 @@ void report_survey_event(_adapter *padapter, union recv_frame *precv_frame)
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct survey_event);
 	evt_hdr->id = EVT_SURVEY;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	psurvey_evt = (struct survey_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 
@@ -11495,7 +11495,7 @@ void report_surveydone_event(_adapter *padapter, bool acs)
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct surveydone_event);
 	evt_hdr->id = EVT_SURVEY_DONE;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	psurveydone_evt = (struct surveydone_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 	psurveydone_evt->bss_cnt = pmlmeext->sitesurvey_res.bss_cnt;
@@ -11544,7 +11544,7 @@ u32 report_join_res(_adapter *padapter, int aid_res, u16 status)
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct joinbss_event);
 	evt_hdr->id = EVT_JOINBSS;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	pjoinbss_evt = (struct joinbss_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 	_rtw_memcpy((unsigned char *)(&(pjoinbss_evt->network.network)), &(pmlmeinfo->network), sizeof(WLAN_BSSID_EX));
@@ -11595,7 +11595,7 @@ void report_wmm_edca_update(_adapter *padapter)
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct wmm_event);
 	evt_hdr->id = EVT_WMM_UPDATE;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	pwmm_event = (struct wmm_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 	pwmm_event->wmm = 0;
@@ -11630,7 +11630,7 @@ u32 report_del_sta_event(_adapter *padapter, unsigned char *MacAddr, unsigned sh
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct stadel_event);
 	evt_hdr->id = EVT_DEL_STA;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	pdel_sta_evt = (struct stadel_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 	_rtw_memcpy((unsigned char *)(&(pdel_sta_evt->macaddr)), MacAddr, ETH_ALEN);
@@ -11707,7 +11707,7 @@ void report_add_sta_event(_adapter *padapter, unsigned char *MacAddr)
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct stassoc_event);
 	evt_hdr->id = EVT_ADD_STA;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	padd_sta_evt = (struct stassoc_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 	_rtw_memcpy((unsigned char *)(&(padd_sta_evt->macaddr)), MacAddr, ETH_ALEN);
@@ -12524,7 +12524,7 @@ void linked_status_chk(_adapter *padapter, u8 from_timer)
 
 #ifdef CONFIG_TDLS
 #ifdef CONFIG_TDLS_CH_SW
-		if (ATOMIC_READ(&padapter->tdlsinfo.chsw_info.chsw_on) == _TRUE)
+		if (atomic_read(&padapter->tdlsinfo.chsw_info.chsw_on) == _TRUE)
 			return;
 #endif /* CONFIG_TDLS_CH_SW */
 
@@ -12742,15 +12742,15 @@ void rtw_tbtx_xmit_timer_hdl(void *ctx)
 	_adapter *padapter = (_adapter *)ctx;
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
 
-	if (ATOMIC_READ(&padapter->tbtx_remove_tx_pause) == _TRUE){
-		ATOMIC_SET(&padapter->tbtx_tx_pause, _FALSE);
+	if (atomic_read(&padapter->tbtx_remove_tx_pause) == _TRUE){
+		atomic_set(&padapter->tbtx_tx_pause, _FALSE);
 		rtw_tx_control_cmd(padapter);
 	}else {
 		rtw_issue_action_token_rel(padapter);
-		ATOMIC_SET(&padapter->tbtx_tx_pause, _TRUE);
+		atomic_set(&padapter->tbtx_tx_pause, _TRUE);
 		rtw_tx_control_cmd(padapter);
 		_set_timer(&pmlmeext->tbtx_xmit_timer, MAX_TXPAUSE_DURATION);
-		ATOMIC_SET(&padapter->tbtx_remove_tx_pause, _TRUE);
+		atomic_set(&padapter->tbtx_remove_tx_pause, _TRUE);
 	}
 }
 
@@ -12825,7 +12825,7 @@ outof_loop:
 			i++;
 		}
 	}
-	ATOMIC_SET(&pstapriv->nr_token_keeper, nr_send);
+	atomic_set(&pstapriv->nr_token_keeper, nr_send);
 	
 
 exit:
@@ -12984,7 +12984,7 @@ void report_sta_timeout_event(_adapter *padapter, u8 *MacAddr, unsigned short re
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct stadel_event);
 	evt_hdr->id = EVT_TIMEOUT_STA;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	pdel_sta_evt = (struct stadel_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 	_rtw_memcpy((unsigned char *)(&(pdel_sta_evt->macaddr)), MacAddr, ETH_ALEN);
@@ -13165,7 +13165,7 @@ u8 tx_control_hdl(_adapter *adapter)
 {
 	u8 val;
 
-	if(ATOMIC_READ(&adapter->tbtx_tx_pause))
+	if(atomic_read(&adapter->tbtx_tx_pause))
 		val = 0xff;
 	else
 		val = 0x00;
@@ -15068,7 +15068,7 @@ write_to_cam:
 			ctrl |= BIT(7);
 		write_cam(padapter, cam_id, ctrl, pparm->addr, pparm->key);
 		if (!(pparm->gk))
-			ATOMIC_INC(&psta->keytrack);	/*CVE-2020-24587*/
+			atomic_inc(&psta->keytrack);	/*CVE-2020-24587*/
 	}
 	ret = H2C_SUCCESS_RSP;
 
@@ -15261,7 +15261,7 @@ u8 mlme_evt_hdl(_adapter *padapter, unsigned char *pbuf)
 
 #ifdef CHECK_EVENT_SEQ
 	/* checking event sequence...		 */
-	if (evt_hdr->seq != (ATOMIC_READ(&pevt_priv->event_seq) & 0x7f)) {
+	if (evt_hdr->seq != (atomic_read(&pevt_priv->event_seq) & 0x7f)) {
 		pevt_priv->event_seq = (evt_hdr->seq + 1) & 0x7f;
 		goto _abort_event_;
 	}
@@ -15280,7 +15280,7 @@ u8 mlme_evt_hdl(_adapter *padapter, unsigned char *pbuf)
 
 	}
 
-	ATOMIC_INC(&pevt_priv->event_seq);
+	atomic_inc(&pevt_priv->event_seq);
 
 	if (peventbuf) {
 		event_callback = wlanevents[evt_hdr->id].event_callback;

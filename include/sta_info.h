@@ -300,7 +300,7 @@ struct sta_info {
 	union Keytype	dot118021x_UncstKey;
 	union pn48		dot11txpn;			/* PN48 used for Unicast xmit */
 	union pn48		dot11rxpn;			/* PN48 used for Unicast recv. */
-	ATOMIC_T	keytrack;
+	atomic_t	keytrack;
 #ifdef CONFIG_RTW_MESH
 	/* peer's GTK, RX only */
 	u8 group_privacy;
@@ -364,7 +364,7 @@ struct sta_info {
 
 	/* for A-MPDU Rx reordering buffer control */
 	struct recv_reorder_ctrl recvreorder_ctrl[TID_NUM];
-	ATOMIC_T continual_no_rx_packet[TID_NUM];
+	atomic_t continual_no_rx_packet[TID_NUM];
 	/* for A-MPDU Tx */
 	/* unsigned char		ampdu_txen_bitmap; */
 	u16	BA_starting_seqctrl[16];
@@ -711,7 +711,7 @@ struct	sta_priv {
 	u8 tbtx_asoc_list_cnt;
 	struct sta_info *token_holder[NR_MAXSTA_INSLOT];
 	struct sta_info *last_token_holder;
-	ATOMIC_T nr_token_keeper;
+	atomic_t nr_token_keeper;
 #endif
 #endif /* CONFIG_AP_MODE */
 

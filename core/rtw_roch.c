@@ -97,14 +97,14 @@ static int rtw_ro_ch_handler(_adapter *adapter, u8 *buf)
 		if ((remain_ch != rtw_mi_get_union_chan(adapter)) && !check_fwstate(&adapter->mlmepriv, WIFI_ASOC_STATE)) {
 			if (remain_ch != pmlmeext->cur_channel
 				#ifdef RTW_ROCH_BACK_OP
-				|| ATOMIC_READ(&pwdev_priv->switch_ch_to) == 1
+				|| atomic_read(&pwdev_priv->switch_ch_to) == 1
 				#endif
 			) {
 				rtw_leave_opch(adapter);
 
 				#ifdef RTW_ROCH_BACK_OP
 				RTW_INFO("%s, set switch ch timer, duration=%d\n", __func__, prochinfo->max_away_dur);
-				ATOMIC_SET(&pwdev_priv->switch_ch_to, 0);
+				atomic_set(&pwdev_priv->switch_ch_to, 0);
 				/* remain_ch is not same as union channel. duration is max_away_dur to
 				 * back to AP's channel.
 				 */
@@ -181,7 +181,7 @@ static int rtw_cancel_ro_ch_handler(_adapter *padapter, u8 *buf)
 
 #if defined(RTW_ROCH_BACK_OP) && defined(CONFIG_CONCURRENT_MODE)
 	_cancel_timer_ex(&prochinfo->ap_roch_ch_switch_timer);
-	ATOMIC_SET(&pwdev_priv->switch_ch_to, 1);
+	atomic_set(&pwdev_priv->switch_ch_to, 1);
 #endif
 
 	if (rtw_mi_get_ch_setting_union(padapter, &ch, &bw, &offset) != 0) {
@@ -358,7 +358,7 @@ void rtw_ap_roch_ch_switch_timer_process(void *ctx)
 #endif
 
 #ifdef CONFIG_IOCTL_CFG80211
-	ATOMIC_SET(&pwdev_priv->switch_ch_to, 1);
+	atomic_set(&pwdev_priv->switch_ch_to, 1);
 #endif
 
 	rtw_roch_wk_cmd(adapter, ROCH_AP_ROCH_CH_SWITCH_PROCESS_WK, NULL, 0);
@@ -479,7 +479,7 @@ void rtw_concurrent_handler(_adapter	*padapter)
 			}
 
 			/* set channel switch timer */
-			ATOMIC_SET(&pwdev_priv->switch_ch_to, 0);
+			atomic_set(&pwdev_priv->switch_ch_to, 0);
 			_set_timer(&prochinfo->ap_roch_ch_switch_timer, duration);
 			RTW_INFO("%s, set switch ch timer, duration=%d\n", __func__, duration);
 

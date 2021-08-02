@@ -162,7 +162,7 @@ void dump_wpath(void *sel, _adapter *adapter)
 	char next_hop[ETH_ALEN];
 	u32 age_ms;
 
-	RTW_PRINT_SEL(sel, "num:%d\n", ATOMIC_READ(&adapter->wds_path_num));
+	RTW_PRINT_SEL(sel, "num:%d\n", atomic_read(&adapter->wds_path_num));
 	RTW_PRINT_SEL(sel, "%-17s %-17s %-6s\n"
 		, "dst", "next_hop", "age"
 	);
@@ -229,7 +229,7 @@ struct rtw_wds_path *rtw_wds_path_add(_adapter *adapter,
 	if (IS_MCAST(dst))
 		return ERR_PTR(-ENOTSUPP);
 
-	if (ATOMIC_INC_UNLESS(&adapter->wds_path_num, RTW_WDS_MAX_PATHS) == 0)
+	if (atomic_add_unless(&adapter->wds_path_num, RTW_WDS_MAX_PATHS) == 0)
 		return ERR_PTR(-ENOSPC);
 
 	new_wpath = rtw_wds_path_new(adapter, dst);
@@ -269,7 +269,7 @@ static void rtw_wds_path_free_rcu(struct rtw_wds_table *tbl,
 {
 	_adapter *adapter = wpath->adapter;
 
-	ATOMIC_DEC(&adapter->wds_path_num);
+	atomic_dec(&adapter->wds_path_num);
 
 	rtw_wpath_free_rcu(wpath);
 }
@@ -386,7 +386,7 @@ int rtw_wds_pathtbl_init(_adapter *adapter)
 
 	rtw_rhashtable_init(&tbl_path->rhead, &rtw_wds_rht_params);
 
-	ATOMIC_SET(&adapter->wds_path_num, 0);
+	atomic_set(&adapter->wds_path_num, 0);
 	adapter->wds_paths = tbl_path;
 
 	return 0;
@@ -504,7 +504,7 @@ static void rtw_wds_gptr_free_rcu(struct rtw_wds_gptr_table *tbl, struct rtw_wds
 {
 	_adapter *adapter = wgptr->adapter;
 
-	ATOMIC_DEC(&adapter->wds_gpt_record_num);
+	atomic_dec(&adapter->wds_gpt_record_num);
 
 	rtw_wgptr_free_rcu(wgptr);
 }
@@ -606,7 +606,7 @@ void dump_wgptr(void *sel, _adapter *adapter)
 	char src[ETH_ALEN];
 	u32 age_ms;
 
-	RTW_PRINT_SEL(sel, "num:%d\n", ATOMIC_READ(&adapter->wds_gpt_record_num));
+	RTW_PRINT_SEL(sel, "num:%d\n", atomic_read(&adapter->wds_gpt_record_num));
 	RTW_PRINT_SEL(sel, "%-17s %-6s\n"
 		, "src", "age"
 	);
@@ -657,7 +657,7 @@ static struct rtw_wds_gptr *rtw_wds_gptr_add(_adapter *adapter, const u8 *src)
 	if (!tbl)
 		return ERR_PTR(-ENOTSUPP);
 
-	if (ATOMIC_INC_UNLESS(&adapter->wds_gpt_record_num, RTW_WDS_MAX_PATHS) == 0)
+	if (atomic_add_unless(&adapter->wds_gpt_record_num, RTW_WDS_MAX_PATHS) == 0)
 		return ERR_PTR(-ENOSPC);
 
 	new_wgptr = rtw_wds_gptr_new(adapter, src);
@@ -769,7 +769,7 @@ int rtw_wds_gptr_tbl_init(_adapter *adapter)
 
 	rtw_rhashtable_init(&tbl->rhead, &rtw_wds_gptr_rht_params);
 
-	ATOMIC_SET(&adapter->wds_gpt_record_num, 0);
+	atomic_set(&adapter->wds_gpt_record_num, 0);
 	adapter->wds_gpt_records = tbl;
 
 	return 0;

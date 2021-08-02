@@ -133,7 +133,7 @@ sint _rtw_init_recv_priv(struct recv_priv *precvpriv, _adapter *padapter)
 
 #ifdef CONFIG_USB_HCI
 
-	ATOMIC_SET(&(precvpriv->rx_pending_cnt), 1);
+	atomic_set(&(precvpriv->rx_pending_cnt), 1);
 
 	_rtw_init_sema(&precvpriv->allrxreturnevt, 0);
 
@@ -1163,7 +1163,7 @@ sint rtw_tdls_rx_data_validate_hdr(
 		}
 
 #ifdef CONFIG_TDLS_CH_SW
-		if (ATOMIC_READ(&pchsw_info->chsw_on) == _TRUE) {
+		if (atomic_read(&pchsw_info->chsw_on) == _TRUE) {
 			if (adapter->mlmeextpriv.cur_channel != rtw_get_oper_ch(adapter)) {
 				pchsw_info->ch_sw_state |= TDLS_PEER_AT_OFF_STATE;
 				if (!(pchsw_info->ch_sw_state & TDLS_CH_SW_INITIATOR_STATE))
@@ -2788,7 +2788,7 @@ union recv_frame *recvframe_chk_defrag(PADAPTER padapter, union recv_frame *prec
 		}
 		/* CVE-2020-24587 */
 		if ((psta) && (pdefrag_q))
-			precv_frame->u.hdr.keytrack = ATOMIC_READ(&psta->keytrack);
+			precv_frame->u.hdr.keytrack = atomic_read(&psta->keytrack);
 	}
 
 	if (ismfrag == 1) {
@@ -4706,7 +4706,7 @@ int rtw_inc_and_chk_continual_no_rx_packet(struct sta_info *sta, int tid_index)
 {
 
 	int ret = _FALSE;
-	int value = ATOMIC_INC_RETURN(&sta->continual_no_rx_packet[tid_index]);
+	int value = atomic_inc_return(&sta->continual_no_rx_packet[tid_index]);
 
 	if (value >= MAX_CONTINUAL_NORXPACKET_COUNT)
 		ret = _TRUE;
@@ -4719,7 +4719,7 @@ int rtw_inc_and_chk_continual_no_rx_packet(struct sta_info *sta, int tid_index)
 */
 void rtw_reset_continual_no_rx_packet(struct sta_info *sta, int tid_index)
 {
-	ATOMIC_SET(&sta->continual_no_rx_packet[tid_index], 0);
+	atomic_set(&sta->continual_no_rx_packet[tid_index], 0);
 }
 
 u8 adapter_allow_bmc_data_rx(_adapter *adapter)

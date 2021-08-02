@@ -7490,7 +7490,7 @@ static s32 cfg80211_rtw_remain_on_channel(struct wiphy *wiphy,
 #endif
 #endif
 
-	*cookie = ATOMIC_INC_RETURN(&prochinfo->ro_ch_cookie_gen);
+	*cookie = atomic_inc_return(&prochinfo->ro_ch_cookie_gen);
 
 	RTW_INFO(FUNC_ADPT_FMT"%s ch:%u duration:%d, cookie:0x%llx\n"
 		, FUNC_ADPT_ARG(padapter), wdev == wiphy_to_pd_wdev(wiphy) ? " PD" : ""
@@ -9776,7 +9776,7 @@ void rtw_cfg80211_init_wdev_data(_adapter *padapter)
 #ifdef CONFIG_CONCURRENT_MODE
 	struct rtw_wdev_priv *pwdev_priv = adapter_wdev_data(padapter);
 
-	ATOMIC_SET(&pwdev_priv->switch_ch_to, 1);
+	atomic_set(&pwdev_priv->switch_ch_to, 1);
 #endif
 }
 
@@ -10534,7 +10534,7 @@ int rtw_wdev_alloc(_adapter *padapter, struct wiphy *wiphy)
 	_rtw_mutex_init(&pwdev_priv->roch_mutex);
 
 #ifdef CONFIG_CONCURRENT_MODE
-	ATOMIC_SET(&pwdev_priv->switch_ch_to, 1);
+	atomic_set(&pwdev_priv->switch_ch_to, 1);
 #endif
 
 #ifdef CONFIG_RTW_CFGVENDOR_RSSIMONITOR

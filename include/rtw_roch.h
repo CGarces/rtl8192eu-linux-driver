@@ -34,7 +34,7 @@ struct roch_info {
 	u8 restore_channel;
 	struct ieee80211_channel remain_on_ch_channel;
 	enum nl80211_channel_type remain_on_ch_type;
-	ATOMIC_T ro_ch_cookie_gen;
+	atomic_t ro_ch_cookie_gen;
 	u64 remain_on_ch_cookie;
 	bool is_ro_ch;
 	struct wireless_dev *ro_ch_wdev;

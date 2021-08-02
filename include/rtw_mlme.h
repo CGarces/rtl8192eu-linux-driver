@@ -481,7 +481,7 @@ struct tdls_temp_mgmt {
 #ifdef CONFIG_TDLS_CH_SW
 struct tdls_ch_switch {
 	u32	ch_sw_state;
-	ATOMIC_T	chsw_on;
+	atomic_t	chsw_on;
 	u8	addr[ETH_ALEN];
 	u8	off_ch_num;
 	u8	ch_offset;
@@ -615,7 +615,7 @@ struct mlme_priv {
 
 #ifdef CONFIG_SET_SCAN_DENY_TIMER
 	_timer set_scan_deny_timer;
-	ATOMIC_T set_scan_deny; /* 0: allowed, 1: deny */
+	atomic_t set_scan_deny; /* 0: allowed, 1: deny */
 #endif
 	u8 wpa_phase;/*wpa_phase after wps finished*/
 
@@ -678,7 +678,7 @@ struct mlme_priv {
 	/* Number of associated stations that do not support Short Preamble */
 	int num_sta_no_short_preamble;
 
-	ATOMIC_T olbc; /* Overlapping Legacy BSS Condition (Legacy b/g)*/
+	atomic_t olbc; /* Overlapping Legacy BSS Condition (Legacy b/g)*/
 
 	/* Number of HT associated stations that do not support greenfield */
 	int num_sta_ht_no_gf;
@@ -693,7 +693,7 @@ struct mlme_priv {
 	int num_sta_40mhz_intolerant;
 
 	/* Overlapping BSS information */
-	ATOMIC_T olbc_ht;
+	atomic_t olbc_ht;
 
 #ifdef CONFIG_80211N_HT
 	int ht_20mhz_width_req;

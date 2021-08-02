@@ -2530,8 +2530,8 @@ u8 rtw_init_default_value(_adapter *padapter)
 #endif
 
 #ifdef CONFIG_RTW_TOKEN_BASED_XMIT
-	ATOMIC_SET(&padapter->tbtx_tx_pause, _FALSE);
-	ATOMIC_SET(&padapter->tbtx_remove_tx_pause, _FALSE);
+	atomic_set(&padapter->tbtx_tx_pause, _FALSE);
+	atomic_set(&padapter->tbtx_remove_tx_pause, _FALSE);
 	padapter->tbtx_capability = _TRUE;
 #endif
 
@@ -2578,7 +2578,7 @@ struct dvobj_priv *devobj_init(void)
 
 	pdvobj->processing_dev_remove = _FALSE;
 
-	ATOMIC_SET(&pdvobj->disable_func, 0);
+	atomic_set(&pdvobj->disable_func, 0);
 
 	rtw_macid_ctl_init(&pdvobj->macid_ctl);
 #ifdef CONFIG_CLIENT_PORT_CFG
@@ -4735,7 +4735,7 @@ void rtw_dev_unload(PADAPTER padapter)
 		
 		rtw_stop_drv_threads(padapter);
 
-		if (ATOMIC_READ(&(pcmdpriv->cmdthd_running)) == _TRUE) {
+		if (atomic_read(&(pcmdpriv->cmdthd_running)) == _TRUE) {
 			RTW_ERR("cmd_thread not stop !!\n");
 			rtw_warn_on(1);
 		}

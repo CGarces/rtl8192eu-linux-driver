@@ -1029,7 +1029,7 @@ phy_SwChnlAndSetBwMode8192E(
 #ifdef CONFIG_TDLS
 #ifdef CONFIG_TDLS_CH_SW
 	/* It takes too much time of setting tx power, influence channel switch */
-	if ((ATOMIC_READ(&Adapter->tdlsinfo.chsw_info.chsw_on) == _FALSE))
+	if ((atomic_read(&Adapter->tdlsinfo.chsw_info.chsw_on) == _FALSE))
 #endif
 #endif /* CONFIG_TDLS */
 		rtw_hal_set_tx_power_level(Adapter, pHalData->current_channel);

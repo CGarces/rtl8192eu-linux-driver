@@ -613,7 +613,7 @@ void rtw_ft_report_reassoc_evt(_adapter *padapter, u8 *pMacAddr)
 	evt_hdr = (struct rtw_evt_header *)(pevtcmd);
 	evt_hdr->len = sizeof(struct stassoc_event);
 	evt_hdr->id = EVT_FT_REASSOC;
-	evt_hdr->seq = ATOMIC_INC_RETURN(&pmlmeext->event_seq);
+	evt_hdr->seq = atomic_inc_return(&pmlmeext->event_seq);
 
 	passoc_sta_evt = (struct stassoc_event *)(pevtcmd + sizeof(struct rtw_evt_header));
 	_rtw_memcpy((unsigned char *)(&(passoc_sta_evt->macaddr)), pMacAddr, ETH_ALEN);
