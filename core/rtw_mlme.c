@@ -185,15 +185,6 @@ exit:
 void rtw_mfree_mlme_priv_lock(struct mlme_priv *pmlmepriv);
 void rtw_mfree_mlme_priv_lock(struct mlme_priv *pmlmepriv)
 {
-	_rtw_spinlock_free(&pmlmepriv->lock);
-	_rtw_spinlock_free(&(pmlmepriv->free_bss_pool.lock));
-	_rtw_spinlock_free(&(pmlmepriv->scanned_queue.lock));
-#ifdef CONFIG_RTW_MULTI_AP
-	if (is_primary_adapter(mlme_to_adapter(pmlmepriv))) {
-		_rtw_spinlock_free(&(pmlmepriv->unassoc_sta_queue.lock));
-		_rtw_spinlock_free(&(pmlmepriv->free_unassoc_sta_queue.lock));
-	}
-#endif
 }
 
 void rtw_free_mlme_priv_ie_data(struct mlme_priv *pmlmepriv)

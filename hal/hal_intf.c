@@ -191,7 +191,6 @@ void rtw_hal_dm_deinit(_adapter *padapter)
 
 		padapter->hal_func.dm_deinit(padapter);
 
-		_rtw_spinlock_free(&pHalData->IQKSpinLock);
 	}
 }
 
