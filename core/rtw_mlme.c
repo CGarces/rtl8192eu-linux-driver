@@ -340,12 +340,10 @@ void _rtw_free_mlme_priv(struct mlme_priv *pmlmepriv)
 	if (pmlmepriv) {
 		rtw_mfree_mlme_priv_lock(pmlmepriv);
 
-		if (pmlmepriv->free_bss_buf)
-			rtw_vmfree(pmlmepriv->free_bss_buf, pmlmepriv->max_bss_cnt * sizeof(struct wlan_network));
+		vfree(pmlmepriv->free_bss_buf);
 #ifdef CONFIG_RTW_MULTI_AP
 		if (is_primary_adapter(adapter)) {
-			if (pmlmepriv->free_unassoc_sta_buf)
-				rtw_vmfree(pmlmepriv->free_unassoc_sta_buf, pmlmepriv->max_unassoc_sta_cnt * sizeof(struct unassoc_sta_info));
+			vfree(pmlmepriv->free_unassoc_sta_buf);
 		}
 #endif
 	}
