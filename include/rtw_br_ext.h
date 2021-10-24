@@ -16,14 +16,12 @@
 #define _RTW_BR_EXT_H_
 
 #define CL_IPV6_PASS	1
-#define MACADDRLEN		6
+
 #define _DEBUG_ERR		RTW_INFO
 #define _DEBUG_INFO		/* RTW_INFO */
 #define DEBUG_WARN		RTW_INFO
 #define DEBUG_INFO		/* RTW_INFO */
 #define DEBUG_ERR		RTW_INFO
-/* #define GET_MY_HWADDR		((GET_MIB(priv))->dot11OperationEntry.hwaddr) */
-#define GET_MY_HWADDR(padapter)		(adapter_mac_addr(padapter))
 
 #define NAT25_HASH_BITS		4
 #define NAT25_HASH_SIZE		(1 << NAT25_HASH_BITS)
@@ -58,7 +56,7 @@ struct br_ext_info {
 	unsigned int	macclone_enable;
 	unsigned int	dhcp_bcst_disable;
 	int		addPPPoETag;		/* 1: Add PPPoE relay-SID, 0: disable */
-	unsigned char	nat25_dmzMac[MACADDRLEN];
+	unsigned char	nat25_dmzMac[ETH_ALEN];
 	unsigned int	nat25sc_disable;
 };
 
