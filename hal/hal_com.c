@@ -11849,7 +11849,6 @@ void rtw_dump_rx_dframe_info(_adapter *padapter, void *sel)
 	struct sta_recv_dframe_info *psta_dframe_info;
 	int i, j;
 	_list	*plist, *phead;
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u8 null_addr[ETH_ALEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 	if (precvpriv->store_law_data_flag) {
@@ -11866,9 +11865,9 @@ void rtw_dump_rx_dframe_info(_adapter *padapter, void *sel)
 				plist = get_next(plist);
 
 				if (psta) {
-					if ((_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN)  !=   _TRUE)
-					    && (_rtw_memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN)  !=  _TRUE)
-					    && (_rtw_memcmp(psta->cmn.mac_addr, adapter_mac_addr(padapter), ETH_ALEN)  !=  _TRUE)) {
+					if (!is_broadcast_ether_addr(psta->cmn.mac_addr)
+					    && memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN)
+					    && memcmp(psta->cmn.mac_addr, adapter_mac_addr(padapter), ETH_ALEN)) {
 
 						RTW_PRINT_SEL(sel, "==============================\n");
 						RTW_PRINT_SEL(sel, "macaddr =" MAC_FMT "\n", MAC_ARG(psta->cmn.mac_addr));
@@ -11910,7 +11909,6 @@ void rtw_store_phy_info(_adapter *padapter, union recv_frame *prframe)
 {
 	u8 isCCKrate, rf_path , dframe_type;
 	u8 *ptr;
-	u8	bc_addr[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 #ifdef DBG_RX_DFRAME_RAW_DATA
 	struct sta_recv_dframe_info *psta_dframe_info;
 #endif
@@ -11951,7 +11949,7 @@ void rtw_store_phy_info(_adapter *padapter, union recv_frame *prframe)
 					psta_dframe_info = &psta->sta_dframe_info;
 				/*RTW_INFO("=>%s psta->cmn.mac_addr="MAC_FMT" !\n",
 					__FUNCTION__, MAC_ARG(psta->cmn.mac_addr));*/
-				if ((_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN) != _TRUE) || (padapter->registrypriv.mp_mode == 1)) {
+				if (!is_broadcast_ether_addr(psta->cmn.mac_addr) || (padapter->registrypriv.mp_mode == 1)) {
 					psta_dframe_info->sta_data_rate = pattrib->data_rate;
 					psta_dframe_info->sta_sgi = pattrib->sgi;
 					psta_dframe_info->sta_bw_mode = pattrib->bw;
@@ -13158,7 +13156,6 @@ void rtw_set_rts_bw(_adapter *padapter) {
 	int i;
 	u8 enable = 1;
 	bool connect_to_8812 = _FALSE;
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct macid_ctl_t *macid_ctl = dvobj_to_macidctl(dvobj);
 	struct sta_info *station = NULL;
@@ -13175,7 +13172,7 @@ void rtw_set_rts_bw(_adapter *padapter) {
 				struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 				
 				if ( pmlmeinfo->state != WIFI_FW_NULL_STATE) {
-					if(_rtw_memcmp(macid_ctl->sta[i]->cmn.mac_addr, bc_addr, ETH_ALEN) !=  _TRUE) {
+					if(!is_broadcast_ether_addr(macid_ctl->sta[i]->cmn.mac_addr)) {
 						if (  macid_ctl->sta[i]->vendor_8812) {
 							connect_to_8812 = _TRUE;
 							enable = 0;

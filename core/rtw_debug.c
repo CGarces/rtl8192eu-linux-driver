@@ -833,7 +833,6 @@ int proc_get_rx_stat(struct seq_file *m, void *v)
 	struct stainfo_stats	*pstats = NULL;
 	struct sta_priv		*pstapriv = &(adapter->stapriv);
 	u32 i, j;
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u8 null_addr[ETH_ALEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 	_enter_critical_bh(&pstapriv->sta_hash_lock, &irqL);
@@ -847,9 +846,9 @@ int proc_get_rx_stat(struct seq_file *m, void *v)
 
 			if (pstats == NULL)
 				continue;
-			if ((_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN) !=  _TRUE)
-				&& (_rtw_memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN) != _TRUE)
-				&& (_rtw_memcmp(psta->cmn.mac_addr, adapter_mac_addr(adapter), ETH_ALEN) != _TRUE)) {
+			if (!is_broadcast_ether_addr(psta->cmn.mac_addr)
+				&& memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN)
+				&& memcmp(psta->cmn.mac_addr, adapter_mac_addr(adapter), ETH_ALEN)) {
 				RTW_PRINT_SEL(m, "MAC :\t\t"MAC_FMT "\n", MAC_ARG(psta->cmn.mac_addr));
 				RTW_PRINT_SEL(m, "data_rx_cnt :\t%llu\n", sta_rx_data_uc_pkts(psta) - pstats->last_rx_data_uc_pkts);
 				pstats->last_rx_data_uc_pkts = sta_rx_data_uc_pkts(psta);
@@ -884,7 +883,6 @@ int proc_get_tx_stat(struct seq_file *m, void *v)
 	struct sta_priv	*pstapriv = &(adapter->stapriv);
 	struct sta_priv	*pstapriv_primary = &(GET_PRIMARY_ADAPTER(adapter))->stapriv;
 	u32 i, macid_rec_idx = 0;
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u8 null_addr[ETH_ALEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	struct submit_ctx gotc2h;
 
@@ -895,9 +893,9 @@ int proc_get_tx_stat(struct seq_file *m, void *v)
 		while (phead != plist) {
 			psta = LIST_CONTAINOR(plist, struct sta_info, hash_list);
 			plist = get_next(plist);
-			if ((_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN) !=  _TRUE)
-				&& (_rtw_memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN) != _TRUE)
-				&& (_rtw_memcmp(psta->cmn.mac_addr, adapter_mac_addr(adapter), ETH_ALEN) != _TRUE)) {
+			if (!is_broadcast_ether_addr(psta->cmn.mac_addr)
+				&& memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN)
+				&& memcmp(psta->cmn.mac_addr, adapter_mac_addr(adapter), ETH_ALEN)) {
 				memcpy(&sta_mac[macid_rec_idx][0], psta->cmn.mac_addr, ETH_ALEN);
 				mac_id[macid_rec_idx] = psta->cmn.mac_id;
 				macid_rec_idx++;
@@ -1747,7 +1745,6 @@ ssize_t proc_set_rate_ctl(struct file *file, const char __user *buffer, size_t c
 		_list	*plist, *phead;
 		struct sta_info *psta = NULL;
 		struct sta_priv	*pstapriv = &(adapter->stapriv);
-		u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 		u8 null_addr[ETH_ALEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 		uint mac_id[NUM_STA];
 		int i, macid_rec_idx = 0;
@@ -1775,9 +1772,9 @@ ssize_t proc_set_rate_ctl(struct file *file, const char __user *buffer, size_t c
 			while (phead != plist) {
 				psta = LIST_CONTAINOR(plist, struct sta_info, hash_list);
 				plist = get_next(plist);
-				if ((_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN) !=  _TRUE)
-					&& (_rtw_memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN) != _TRUE)
-					&& (_rtw_memcmp(psta->cmn.mac_addr, adapter_mac_addr(adapter), ETH_ALEN) != _TRUE)) {
+				if (!is_broadcast_ether_addr(psta->cmn.mac_addr)
+					&& memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN)
+					&& memcmp(psta->cmn.mac_addr, adapter_mac_addr(adapter), ETH_ALEN)) {
 						mac_id[macid_rec_idx] = psta->cmn.mac_id;
 						macid_rec_idx++;
 				}
@@ -5767,7 +5764,6 @@ ssize_t proc_set_tx_auth(struct file *file, const char __user *buffer, size_t co
 	_irqL	 irqL;
 	char tmp[16];
 	u8	mac_addr[NUM_STA][ETH_ALEN];
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u32 tx_auth;
 	u8 index;
 

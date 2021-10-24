@@ -376,7 +376,6 @@ int rtw_mlcst2unicst(_adapter *padapter, struct sk_buff *skb)
 	struct sta_info *psta = NULL;
 	u8 chk_alive_num = 0;
 	char chk_alive_list[NUM_STA];
-	u8 bc_addr[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u8 null_addr[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 	int i;
@@ -408,9 +407,9 @@ int rtw_mlcst2unicst(_adapter *padapter, struct sk_buff *skb)
 		}
 
 		/* avoid come from STA1 and send back STA1 */
-		if (_rtw_memcmp(psta->cmn.mac_addr, &skb->data[6], ETH_ALEN) == _TRUE
-			|| _rtw_memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN) == _TRUE
-			|| _rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN) == _TRUE
+		if (!memcmp(psta->cmn.mac_addr, &skb->data[6], ETH_ALEN)
+			|| !memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN)
+			|| is_broadcast_ether_addr(psta->cmn.mac_addr)
 		) {
 			DBG_COUNTER(padapter->tx_logs.os_tx_m2u_ignore_self);
 			continue;

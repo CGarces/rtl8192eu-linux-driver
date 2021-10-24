@@ -863,7 +863,6 @@ static int proc_get_tx_info_msg(struct seq_file *m, void *v)
 	struct net_device *dev = m->private;
 	_adapter *adapter = (_adapter *)rtw_netdev_priv(dev);
 	struct sta_info *psta;
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	u8 null_addr[ETH_ALEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 	struct sta_priv *pstapriv = &padapter->stapriv;
@@ -894,9 +893,9 @@ static int proc_get_tx_info_msg(struct seq_file *m, void *v)
 
 			plist = get_next(plist);
 
-			if ((_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN)  !=  _TRUE)
-				&& (_rtw_memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN) != _TRUE)
-				&& (_rtw_memcmp(psta->cmn.mac_addr, adapter_mac_addr(padapter), ETH_ALEN) != _TRUE)) {
+			if (!is_broadcast_ether_addr(psta->cmn.mac_addr)
+				&& memcmp(psta->cmn.mac_addr, null_addr, ETH_ALEN)
+				&& memcmp(psta->cmn.mac_addr, adapter_mac_addr(padapter), ETH_ALEN)) {
 
 				switch (psta->cmn.bw_mode) {
 

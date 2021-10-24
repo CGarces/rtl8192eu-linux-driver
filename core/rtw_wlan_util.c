@@ -3668,7 +3668,6 @@ void rtw_alloc_macid(_adapter *padapter, struct sta_info *psta)
 {
 	int i;
 	_irqL irqL;
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct macid_ctl_t *macid_ctl = dvobj_to_macidctl(dvobj);
 	struct macid_bmp *used_map = &macid_ctl->used;
@@ -3681,7 +3680,7 @@ void rtw_alloc_macid(_adapter *padapter, struct sta_info *psta)
 		return;
 	}
 
-	if (_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN)) {
+	if (is_broadcast_ether_addr(psta->cmn.mac_addr)) {
 		is_bc_sta = _TRUE;
 		rtw_iface_bcmc_id_set(padapter, INVALID_SEC_MAC_CAM_ID);	/*init default value*/
 	}
@@ -3766,7 +3765,6 @@ exit:
 void rtw_release_macid(_adapter *padapter, struct sta_info *psta)
 {
 	_irqL irqL;
-	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	struct macid_ctl_t *macid_ctl = dvobj_to_macidctl(dvobj);
 	u8 ifbmp;
@@ -3807,7 +3805,7 @@ void rtw_release_macid(_adapter *padapter, struct sta_info *psta)
 		goto exit;
 	}
 
-	if (_rtw_memcmp(psta->cmn.mac_addr, bc_addr, ETH_ALEN)) {
+	if (is_broadcast_ether_addr(psta->cmn.mac_addr)) {
 		struct cam_ctl_t *cam_ctl = dvobj_to_sec_camctl(dvobj);
 		u8 id = rtw_iface_bcmc_id_get(padapter);
 
