@@ -6674,14 +6674,11 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param, 
 		if (wep_key_len > 0) {
 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
 			wep_total_len = wep_key_len + FIELD_OFFSET(NDIS_802_11_WEP, KeyMaterial);
-			pwep = (NDIS_802_11_WEP *)rtw_malloc(wep_total_len);
-			if (pwep == NULL) {
+			pwep = kzalloc(wep_total_len, GFP_KERNEL);
+			if (!pwep) {
 				RTW_INFO(" r871x_set_encryption: pwep allocate fail !!!\n");
 				goto exit;
 			}
-
-			memset(pwep, 0, wep_total_len);
-
 			pwep->KeyLength = wep_key_len;
 			pwep->Length = wep_total_len;
 
