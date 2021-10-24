@@ -362,13 +362,11 @@ int usb_write32(struct intf_hdl *pintfhdl, u32 addr, u32 val)
 int usb_writeN(struct intf_hdl *pintfhdl, u32 addr, u32 length, u8 *pdata)
 {
 	u16 wvalue = (u16)(addr & 0x0000ffff);
-	u8 buf[VENDOR_CMD_MAX_DATA_LEN] = {0};
 
 	if (length > VENDOR_CMD_MAX_DATA_LEN)
 		return -EINVAL;
 
-	memcpy(buf, pdata, length);
-	return usbctrl_vendorreq(pintfhdl, wvalue, buf, (length & 0xffff), REALTEK_USB_VENQT_WRITE);
+	return usbctrl_vendorreq(pintfhdl, wvalue, pdata, (length & 0xffff), REALTEK_USB_VENQT_WRITE);
 
 }
 
