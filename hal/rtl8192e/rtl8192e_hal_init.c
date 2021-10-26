@@ -4320,7 +4320,6 @@ void rtl8192e_combo_card_WifiOnlyHwInit(PADAPTER Adapter)
 void rtl8192e_set_hal_ops(struct hal_ops *pHalFunc)
 {
 	pHalFunc->dm_init = &rtl8192e_init_dm_priv;
-	pHalFunc->dm_deinit = &rtl8192e_deinit_dm_priv;
 
 	pHalFunc->read_chip_version = read_chip_version_8192e;
 

@@ -193,7 +193,7 @@ void rtw_hal_dm_deinit(_adapter *padapter)
 	if (is_primary_adapter(padapter)) {
 		PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(padapter);
 
-		padapter->hal_func.dm_deinit(padapter);
+		rtl8192e_deinit_dm_priv(padapter);
 
 	}
 }
@@ -1512,10 +1512,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 	/*** DM section ***/
 	if (NULL == padapter->hal_func.dm_init) {
 		rtw_hal_error_msg("dm_init");
-		ret = _FAIL;
-	}
-	if (NULL == padapter->hal_func.dm_deinit) {
-		rtw_hal_error_msg("dm_deinit");
 		ret = _FAIL;
 	}
 	if (NULL == padapter->hal_func.hal_dm_watchdog) {

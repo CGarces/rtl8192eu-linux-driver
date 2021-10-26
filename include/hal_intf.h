@@ -286,7 +286,6 @@ struct hal_ops {
 	u32(*hal_power_on)(_adapter *padapter);
 	void	(*hal_power_off)(_adapter *padapter);
 	void	(*dm_init)(_adapter *padapter);
-	void	(*dm_deinit)(_adapter *padapter);
 
 	/*** xmit section ***/
 	s32(*init_xmit_priv)(_adapter *padapter);
