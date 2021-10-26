@@ -1597,7 +1597,7 @@ int rtw_mp_mon(struct net_device *dev,
 		padapter->registrypriv.mp_mode = 1;
 		pHalFunc->hal_deinit(padapter);
 		padapter->registrypriv.mp_mode = 0;
-		pHalFunc->hal_init(padapter);
+		rtl8192eu_hal_init(padapter);
 		/*rtw_disassoc_cmd(padapter, 0, 0);*/
 		if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) {
 			rtw_disassoc_cmd(padapter, 500, 0);
@@ -2577,7 +2577,7 @@ int rtw_mp_SetBT(struct net_device *dev,
 #endif
 		pHalFunc->read_adapter_info(padapter);
 		pHalFunc->hal_deinit(padapter);
-		pHalFunc->hal_init(padapter);
+		rtl8192eu_hal_init(padapter);
 		rtw_pm_set_ips(padapter, IPS_NONE);
 		LeaveAllPowerSaveMode(padapter);
 		MPT_PwrCtlDM(padapter, 0);

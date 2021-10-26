@@ -303,7 +303,7 @@ uint rtw_hal_init(_adapter *padapter)
 {
 	uint status = _SUCCESS;
 
-	status = padapter->hal_func.hal_init(padapter);
+	status = rtl8192eu_hal_init(padapter);
 
 	if (status == _SUCCESS) {
 		rtw_set_hw_init_completed(padapter, _TRUE);
@@ -342,7 +342,7 @@ uint	 rtw_hal_init(_adapter *padapter)
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	int i;
 
-	status = padapter->hal_func.hal_init(padapter);
+	status = rtl8192eu_hal_init(padapter);
 
 	if (status == _SUCCESS) {
 		rtw_set_hw_init_completed(padapter, _TRUE);
@@ -1417,10 +1417,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		ret = _FAIL;
 	}
 
-	if (NULL == padapter->hal_func.hal_init) {
-		rtw_hal_error_msg("hal_init");
-		ret = _FAIL;
-	}
 	if (NULL == padapter->hal_func.hal_deinit) {
 		rtw_hal_error_msg("hal_deinit");
 		ret = _FAIL;

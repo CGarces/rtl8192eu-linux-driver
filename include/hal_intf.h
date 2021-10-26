@@ -285,7 +285,6 @@ struct hal_ops {
 	u8	(*read_adapter_info)(_adapter *padapter);
 	u32(*hal_power_on)(_adapter *padapter);
 	void	(*hal_power_off)(_adapter *padapter);
-	u32(*hal_init)(_adapter *padapter);
 	u32(*hal_deinit)(_adapter *padapter);
 	void	(*dm_init)(_adapter *padapter);
 	void	(*dm_deinit)(_adapter *padapter);
@@ -662,6 +661,7 @@ uint rtw_hal_init(_adapter *padapter);
 #ifdef CONFIG_NEW_NETDEV_HDL
 uint rtw_hal_iface_init(_adapter *adapter);
 #endif
+u32 rtl8192eu_hal_init(PADAPTER Adapter);
 uint rtw_hal_deinit(_adapter *padapter);
 void rtw_hal_stop(_adapter *padapter);
 u8 SetHwReg8192EU(PADAPTER padapter, u8 variable, u8 *val);

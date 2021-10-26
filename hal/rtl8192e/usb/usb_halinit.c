@@ -1505,7 +1505,6 @@ void rtl8192eu_set_hal_ops(_adapter *padapter)
 	pHalFunc->hal_power_on = _InitPowerOn_8192EU;
 	pHalFunc->hal_power_off = hal_poweroff_8192eu;
 
-	pHalFunc->hal_init = &rtl8192eu_hal_init;
 	pHalFunc->hal_deinit = &rtl8192eu_hal_deinit;
 
 	pHalFunc->inirp_init = &rtl8192eu_inirp_init;
