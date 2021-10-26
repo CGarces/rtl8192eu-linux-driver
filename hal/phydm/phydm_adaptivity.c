@@ -460,7 +460,7 @@ boolean phydm_edcca_abort(void *dm_void)
 	}
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	((PADAPTER)adapter)->HalFunc.GetHwRegHandler(adapter,
+	GetHwReg8192EU(adapter,
 						      HW_VAR_FW_PSMODE_STATUS,
 						      (u8 *)(&is_fw_in_psmode));
 

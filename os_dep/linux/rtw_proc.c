@@ -1060,7 +1060,7 @@ static int proc_get_turboedca_ctrl(struct seq_file *m, void *v)
 			RTW_PRINT_SEL(m, "Turbo-EDCA : %s, mode=%d, edca_param_mode=0x%x\n", "Disable", hal_data->dis_turboedca, hal_data->edca_param_mode);
 
 
-		rtw_hal_get_hwreg(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&edca_param));
+		GetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&edca_param));
 
 		_RTW_PRINT_SEL(m, "PARAM_BE:0x%x\n", edca_param);
 		
@@ -1167,7 +1167,7 @@ static int proc_get_mac_qinfo(struct seq_file *m, void *v)
 	struct net_device *dev = m->private;
 	_adapter *adapter = (_adapter *)rtw_netdev_priv(dev);
 
-	rtw_hal_get_hwreg(adapter, HW_VAR_DUMP_MAC_QUEUE_INFO, (u8 *)m);
+	GetHwReg8192EU(adapter, HW_VAR_DUMP_MAC_QUEUE_INFO, (u8 *)m);
 
 	return 0;
 }

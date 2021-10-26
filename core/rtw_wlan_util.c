@@ -141,7 +141,7 @@ s8 rtw_get_sta_rx_nss(_adapter *adapter, struct sta_info *psta)
 		return nss;
 
 	custom_rf_type = adapter->registrypriv.rf_config;
-	rtw_hal_get_hwreg(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	if (RF_TYPE_VALID(custom_rf_type))
 		rf_type = custom_rf_type;
 
@@ -170,7 +170,7 @@ s8 rtw_get_sta_tx_nss(_adapter *adapter, struct sta_info *psta)
 		return nss;
 
 	custom_rf_type = adapter->registrypriv.rf_config;
-	rtw_hal_get_hwreg(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	if (RF_TYPE_VALID(custom_rf_type))
 		rf_type = custom_rf_type;
 
@@ -638,8 +638,8 @@ void set_channel_bwmode(_adapter *padapter, unsigned char channel, unsigned char
 		{
 			u8 take_care_iqk, do_iqk;
 
-			rtw_hal_get_hwreg(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
-			rtw_hal_get_hwreg(padapter, HW_VAR_DO_IQK, &do_iqk);
+			GetHwReg8192EU(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
+			GetHwReg8192EU(padapter, HW_VAR_DO_IQK, &do_iqk);
 			if ((take_care_iqk == _TRUE) && (do_iqk == _TRUE))
 				iqk_info_backup = _TRUE;
 		}
@@ -1881,7 +1881,7 @@ void HT_caps_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs pIE)
 	for (i = 0; i < 16; i++)
 		pmlmeinfo->HT_caps.u.HT_cap_element.MCS_rate[i] &= pmlmeext->default_supported_mcs_set[i];
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	tx_nss = rtw_min(rf_type_to_rf_tx_cnt(rf_type), hal_spec->tx_nss_num);
 
 	switch (tx_nss) {

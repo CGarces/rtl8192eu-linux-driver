@@ -1618,7 +1618,7 @@ hal_EfuseGetCurrentSize_8192E(IN	PADAPTER	pAdapter,
 	if (bPseudoTest)
 		efuse_addr = (u16)(fakeEfuseUsedBytes);
 	else
-		rtw_hal_get_hwreg(pAdapter, HW_VAR_EFUSE_BYTES, (u8 *)&efuse_addr);
+		GetHwReg8192EU(pAdapter, HW_VAR_EFUSE_BYTES, (u8 *)&efuse_addr);
 	/* RTPRINT(FEEPROM, EFUSE_PG, ("hal_EfuseGetCurrentSize_8723A(), start_efuse_addr = %d\n", efuse_addr)); */
 
 	while (bContinual &&
@@ -1980,7 +1980,7 @@ efuse_PgPacketPartialWrite(
 #endif
 
 		} else
-			rtw_hal_get_hwreg(pAdapter, HW_VAR_EFUSE_BYTES, (u8 *)&startAddr);
+			GetHwReg8192EU(pAdapter, HW_VAR_EFUSE_BYTES, (u8 *)&startAddr);
 	} else {
 		if (bPseudoTest) {
 #ifdef HAL_EFUSE_MEMORY
@@ -1990,7 +1990,7 @@ efuse_PgPacketPartialWrite(
 #endif
 
 		} else
-			rtw_hal_get_hwreg(pAdapter, HW_VAR_EFUSE_BT_BYTES, (u8 *)&startAddr);
+			GetHwReg8192EU(pAdapter, HW_VAR_EFUSE_BT_BYTES, (u8 *)&startAddr);
 	}
 
 	startAddr %= efuse_max;
@@ -2430,7 +2430,7 @@ static void hw_var_set_monitor(PADAPTER Adapter, u8 variable, u8 *val)
 		rcr_bits |= RCR_APPFCS;
 #endif
 
-		rtw_hal_get_hwreg(Adapter, HW_VAR_RCR, (u8 *)&pHalData->rcr_backup);
+		GetHwReg8192EU(Adapter, HW_VAR_RCR, (u8 *)&pHalData->rcr_backup);
 		rtw_hal_set_hwreg(Adapter, HW_VAR_RCR, (u8 *)&rcr_bits);
 
 		/* Receive all data frames */

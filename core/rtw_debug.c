@@ -348,7 +348,7 @@ void rf_reg_dump(void *sel, _adapter *adapter)
 	u8 rf_type = 0;
 	u8 path_nums = 0;
 
-	rtw_hal_get_hwreg(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	if ((RF_1T2R == rf_type) || (RF_1T1R == rf_type))
 		path_nums = 1;
 	else
@@ -1668,7 +1668,7 @@ int proc_get_trx_info(struct seq_file *m, void *v)
 		RTW_PRINT_SEL(m, "%d, hwq.accnt=%d\n", i, phwxmit->accnt);
 	}
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_DUMP_MAC_TXFIFO, (u8 *)m);
+	GetHwReg8192EU(padapter, HW_VAR_DUMP_MAC_TXFIFO, (u8 *)m);
 
 #ifdef CONFIG_USB_HCI
 	RTW_PRINT_SEL(m, "rx_urb_pending_cn=%d\n", atomic_read(&(precvpriv->rx_pending_cnt)));

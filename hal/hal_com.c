@@ -1127,7 +1127,7 @@ void rtw_hal_dump_macaddr(void *sel, _adapter *adapter)
 	for (i = 0; i < dvobj->iface_nums; i++) {
 		iface = dvobj->padapters[i];
 		if (iface) {
-			rtw_hal_get_hwreg(iface, HW_VAR_MAC_ADDR, mac_addr);
+			GetHwReg8192EU(iface, HW_VAR_MAC_ADDR, mac_addr);
 			RTW_PRINT_SEL(sel, ADPT_FMT"- hw port(%d) mac_addr ="MAC_FMT"\n",
 				ADPT_ARG(iface), iface->hw_port, MAC_ARG(mac_addr));
 		}
@@ -2027,7 +2027,7 @@ void rtw_hal_update_sta_rate_mask(PADAPTER padapter, struct sta_info *psta)
 
 #ifdef CONFIG_80211N_HT
 if (padapter->registrypriv.ht_enable && is_supported_ht(padapter->registrypriv.wireless_mode)) {
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	tx_nss = rtw_min(rf_type_to_rf_tx_cnt(rf_type), hal_spec->tx_nss_num);
 #ifdef CONFIG_80211AC_VHT
 	if (psta->vhtpriv.vht_option) {
@@ -3167,7 +3167,7 @@ static void rtw_hal_set_tsf_update(_adapter *adapter, u8 en)
 	u32 addr = 0;
 	u8 val8;
 
-	rtw_hal_get_hwreg(adapter, HW_VAR_BCN_CTRL_ADDR, (u8 *)&addr);
+	GetHwReg8192EU(adapter, HW_VAR_BCN_CTRL_ADDR, (u8 *)&addr);
 	if (addr) {
 		val8 = rtw_read8(adapter, addr);
 		if (en && (val8 & DIS_TSF_UDT)) {
@@ -3402,7 +3402,7 @@ inline u8 rtw_hal_rcr_add(_adapter *adapter, u32 add)
 
 	hal = GET_HAL_DATA(adapter);
 
-	rtw_hal_get_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
+	GetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 	rcr |= add;
 	if (rcr != hal->ReceiveConfig)
 		ret = rtw_hal_set_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
@@ -3418,7 +3418,7 @@ inline u8 rtw_hal_rcr_clear(_adapter *adapter, u32 clear)
 
 	hal = GET_HAL_DATA(adapter);
 
-	rtw_hal_get_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
+	GetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 	rcr &= ~clear;
 	if (rcr != hal->ReceiveConfig)
 		ret = rtw_hal_set_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
@@ -3433,7 +3433,7 @@ void rtw_hal_rcr_set_chk_bssid(_adapter *adapter, u8 self_action)
 	u32 rcr, rcr_new;
 	struct mi_state mstate, mstate_s;
 
-	rtw_hal_get_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
+	GetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 	rcr_new = rcr;
 
 #if defined(CONFIG_MI_WITH_MBSSID_CAM) && !defined(CONFIG_CLIENT_PORT_CFG)
@@ -8191,7 +8191,7 @@ static void rtw_hal_gate_bb(_adapter *adapter, bool stop)
 	if (stop) {
 		/* checking TX queue status */
 		for (i = 0 ; i < 5 ; i++) {
-			rtw_hal_get_hwreg(adapter, HW_VAR_CHK_MGQ_CPU_EMPTY, &empty);
+			GetHwReg8192EU(adapter, HW_VAR_CHK_MGQ_CPU_EMPTY, &empty);
 			if (empty) {
 				break;
 			} else {
@@ -11291,7 +11291,7 @@ void GetHwReg(_adapter *adapter, u8 variable, u8 *val)
 		} else {
 			u32 rcr = 0;
 
-			rtw_hal_get_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
+			GetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 			if (rcr & (RCR_UC_MD_EN | RCR_BC_MD_EN | RCR_TIM_PARSER_EN))
 				*val = _FALSE;
 			else
@@ -13908,7 +13908,7 @@ void rtw_hal_get_rf_path(struct dvobj_priv *d, enum rf_type *type,
 
 	a = dvobj_get_primary_adapter(d);
 #ifndef CONFIG_CUSTOMER01_SMART_ANTENNA
-	rtw_hal_get_hwreg(a, HW_VAR_RF_TYPE, &val8);
+	GetHwReg8192EU(a, HW_VAR_RF_TYPE, &val8);
 #else
 	val8 = RF_2T2R;
 #endif

@@ -8984,7 +8984,7 @@ void rtw_cfg80211_init_wiphy(_adapter *padapter)
 	struct wireless_dev *pwdev = padapter->rtw_wdev;
 	struct wiphy *wiphy = pwdev->wiphy;
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 
 	RTW_INFO("%s:rf_type=%d\n", __func__, rf_type);
 

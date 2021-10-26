@@ -170,7 +170,7 @@ static u32 _InitPowerOn_8192EU(_adapter *padapter)
 	/* HW Power on sequence */
 	u8 bMacPwrCtrlOn = _FALSE;
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+	GetHwReg8192EU(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if (bMacPwrCtrlOn == _TRUE)
 		return _SUCCESS;
 
@@ -944,7 +944,7 @@ hal_poweroff_8192eu(
 	u8	u1bTmp;
 	u8 bMacPwrCtrlOn = _FALSE;
 
-	rtw_hal_get_hwreg(Adapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+	GetHwReg8192EU(Adapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if (bMacPwrCtrlOn == _FALSE)
 		return ;
 
@@ -1526,7 +1526,6 @@ void rtl8192eu_set_hal_ops(_adapter *padapter)
 	pHalFunc->read_adapter_info = &ReadAdapterInfo8192EU;
 
 	pHalFunc->set_hw_reg_handler = &SetHwReg8192EU;
-	pHalFunc->GetHwRegHandler = &GetHwReg8192EU;
 	pHalFunc->get_hal_def_var_handler = &GetHalDefVar8192EUsb;
 	pHalFunc->SetHalDefVarHandler = &SetHalDefVar8192EUsb;
 

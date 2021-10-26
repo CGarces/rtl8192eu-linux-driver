@@ -41,7 +41,7 @@ int rtw_fw_ps_state(PADAPTER padapter)
 		goto exit_fw_ps_state;
 	}
 	#if defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8821C) || defined(CONFIG_RTL8822C)
-	rtw_hal_get_hwreg(padapter, HW_VAR_FW_PS_STATE, (u8 *)&fw_ps_state);
+	GetHwReg8192EU(padapter, HW_VAR_FW_PS_STATE, (u8 *)&fw_ps_state);
 	if ((fw_ps_state & BIT_LPS_STATUS) == 0)
 		ret = _SUCCESS;
 	else {
@@ -58,7 +58,7 @@ int rtw_fw_ps_state(PADAPTER padapter)
 		/* 0x88[6:0] = current_ps_state */
 		/* 0x89[7:0] = last_rpwm */
 
-		rtw_hal_get_hwreg(padapter, HW_VAR_FW_PS_STATE, (u8 *)&fw_ps_state);
+		GetHwReg8192EU(padapter, HW_VAR_FW_PS_STATE, (u8 *)&fw_ps_state);
 
 		if ((fw_ps_state & 0x80) == 0)
 			ret = _SUCCESS;
@@ -541,7 +541,7 @@ u8 rtw_cpwm_polling(_adapter *adapter, u8 rpwm, u8 cpwm_orig)
 		start_time = jiffies;
 		do {
 			msleep(1);
-			rtw_hal_get_hwreg(adapter, HW_VAR_CPWM, &cpwm_now);
+			GetHwReg8192EU(adapter, HW_VAR_CPWM, &cpwm_now);
 
 			if ((cpwm_orig ^ cpwm_now) & 0x80) {
 				pwrpriv->cpwm = PS_STATE_S4;
@@ -649,7 +649,7 @@ u8 rtw_set_rpwm(PADAPTER padapter, u8 pslv)
 #ifdef CONFIG_LPS_LCLK
 	cpwm_orig = 0;
 	if (rpwm & PS_ACK)
-		rtw_hal_get_hwreg(padapter, HW_VAR_CPWM, &cpwm_orig);
+		GetHwReg8192EU(padapter, HW_VAR_CPWM, &cpwm_orig);
 #endif
 
 #if defined(CONFIG_LPS_RPWM_TIMER) && !defined(CONFIG_DETECT_CPWM_BY_POLLING)
@@ -788,7 +788,7 @@ void rtw_set_fw_in_ips_mode(PADAPTER padapter, u8 enable)
 		/* H2C done, enter 32k */
 		if (val8 == 0) {
 			/* ser rpwm to enter 32k */
-			rtw_hal_get_hwreg(padapter, HW_VAR_RPWM_TOG, &val8);
+			GetHwReg8192EU(padapter, HW_VAR_RPWM_TOG, &val8);
 			RTW_INFO("%s: read rpwm=%02x\n", __FUNCTION__, val8);
 			val8 += 0x80;
 			val8 |= BIT(0);
@@ -818,10 +818,10 @@ void rtw_set_fw_in_ips_mode(PADAPTER padapter, u8 enable)
 #ifdef CONFIG_LPS_LCLK
 		/* for polling cpwm */
 		cpwm_orig = 0;
-		rtw_hal_get_hwreg(padapter, HW_VAR_CPWM, &cpwm_orig);
+		GetHwReg8192EU(padapter, HW_VAR_CPWM, &cpwm_orig);
 
 		/* ser rpwm */
-		rtw_hal_get_hwreg(padapter, HW_VAR_RPWM_TOG, &val8);
+		GetHwReg8192EU(padapter, HW_VAR_RPWM_TOG, &val8);
 		val8 += 0x80;
 		val8 |= BIT(6);
 		rtw_hal_set_hwreg(padapter, HW_VAR_SET_RPWM, (u8 *)(&val8));
@@ -834,7 +834,7 @@ void rtw_set_fw_in_ips_mode(PADAPTER padapter, u8 enable)
 
 			mdelay(1);
 
-			rtw_hal_get_hwreg(padapter, HW_VAR_CPWM, &cpwm_now);
+			GetHwReg8192EU(padapter, HW_VAR_CPWM, &cpwm_now);
 			if ((cpwm_orig ^ cpwm_now) & 0x80)
 				break;
 
@@ -974,7 +974,7 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 				delay_ms = 20;
 				start_time = jiffies;
 				do {
-					rtw_hal_get_hwreg(padapter, HW_VAR_SYS_CLKR, &val8);
+					GetHwReg8192EU(padapter, HW_VAR_SYS_CLKR, &val8);
 					if (!(val8 & BIT(4))) { /* 0x08 bit4 =1 --> in 32k, bit4 = 0 --> leave 32k */
 						pwrpriv->cpwm = PS_STATE_S4;
 						break;
@@ -1306,7 +1306,7 @@ void LeaveAllPowerSaveModeDirect(PADAPTER Adapter)
 
 #ifndef CONFIG_DETECT_CPWM_BY_POLLING
 		cpwm_orig = 0;
-		rtw_hal_get_hwreg(Adapter, HW_VAR_CPWM, &cpwm_orig);
+		GetHwReg8192EU(Adapter, HW_VAR_CPWM, &cpwm_orig);
 #endif /* CONFIG_DETECT_CPWM_BY_POLLING */
 		rpwm = rtw_set_rpwm(Adapter, PS_STATE_S4);
 

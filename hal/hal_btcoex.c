@@ -1524,7 +1524,7 @@ u8 halbtcoutsrc_UnderIps(PBTC_COEXIST pBtCoexist)
 	if (rf_off == pwrpriv->rf_pwrstate)
 		return _TRUE;
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+	GetHwReg8192EU(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if (_FALSE == bMacPwrCtrlOn)
 		return _TRUE;
 

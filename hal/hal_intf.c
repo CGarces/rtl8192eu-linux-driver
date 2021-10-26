@@ -413,11 +413,6 @@ u8 rtw_hal_set_hwreg(_adapter *padapter, u8 variable, u8 *val)
 	return padapter->hal_func.set_hw_reg_handler(padapter, variable, val);
 }
 
-void rtw_hal_get_hwreg(_adapter *padapter, u8 variable, u8 *val)
-{
-	padapter->hal_func.GetHwRegHandler(padapter, variable, val);
-}
-
 u8 rtw_hal_set_def_var(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue)
 {
 	return padapter->hal_func.SetHalDefVarHandler(padapter, eVariable, pValue);
@@ -532,8 +527,7 @@ void rtw_hal_pci_dbi_write(_adapter *padapter, u16 addr, u8 data)
 
 u8 rtw_hal_pci_dbi_read(_adapter *padapter, u16 addr)
 {
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_DBI, (u8 *)(&addr));
-
+	GetHwReg8192EU(padapter, HW_VAR_DBI, (u8 *)(&addr));
 	return (u8)addr;
 }
 
@@ -549,7 +543,7 @@ void rtw_hal_pci_mdio_write(_adapter *padapter, u8 addr, u16 data)
 
 u16 rtw_hal_pci_mdio_read(_adapter *padapter, u8 addr)
 {
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_MDIO, &addr);
+	GetHwReg8192EU(padapter, HW_VAR_MDIO, &addr);
 
 	return (u8)addr;
 }
@@ -558,7 +552,7 @@ u8 rtw_hal_pci_l1off_nic_support(_adapter *padapter)
 {
 	u8 l1off;
 
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_L1OFF_NIC_SUPPORT, &l1off);
+	GetHwReg8192EU(padapter, HW_VAR_L1OFF_NIC_SUPPORT, &l1off);
 	return l1off;
 }
 
@@ -566,7 +560,7 @@ u8 rtw_hal_pci_l1off_capability(_adapter *padapter)
 {
 	u8 l1off;
 
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_L1OFF_CAPABILITY, &l1off);
+	GetHwReg8192EU(padapter, HW_VAR_L1OFF_CAPABILITY, &l1off);
 	return l1off;
 }
 
@@ -1554,10 +1548,7 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		rtw_hal_error_msg("set_hw_reg_handler");
 		ret = _FAIL;
 	}
-	if (NULL == padapter->hal_func.GetHwRegHandler) {
-		rtw_hal_error_msg("GetHwRegHandler");
-		ret = _FAIL;
-	}
+
 	if (NULL == padapter->hal_func.get_hal_def_var_handler) {
 		rtw_hal_error_msg("get_hal_def_var_handler");
 		ret = _FAIL;

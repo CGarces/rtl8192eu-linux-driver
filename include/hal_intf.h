@@ -348,11 +348,6 @@ struct hal_ops {
 	void	(*hal_dm_watchdog)(_adapter *padapter);
 
 	u8	(*set_hw_reg_handler)(_adapter *padapter, u8	variable, u8 *val);
-
-	void	(*GetHwRegHandler)(_adapter *padapter, u8	variable, u8 *val);
-
-
-
 	u8 (*get_hal_def_var_handler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);
 
 	u8(*SetHalDefVarHandler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);
@@ -671,7 +666,7 @@ uint rtw_hal_iface_init(_adapter *adapter);
 uint rtw_hal_deinit(_adapter *padapter);
 void rtw_hal_stop(_adapter *padapter);
 u8 rtw_hal_set_hwreg(PADAPTER padapter, u8 variable, u8 *val);
-void rtw_hal_get_hwreg(PADAPTER padapter, u8 variable, u8 *val);
+void GetHwReg8192EU(PADAPTER padapter, u8 variable, u8 *val);
 
 void rtw_hal_chip_configure(_adapter *padapter);
 u8 rtw_hal_read_chip_info(_adapter *padapter);

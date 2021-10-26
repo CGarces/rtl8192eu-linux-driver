@@ -1595,7 +1595,7 @@ void rtw_btcoex_set_ant_info(PADAPTER padapter)
 		u8 bMacPwrCtrlOn = _FALSE;
 
 		rtw_btcoex_AntInfoSetting(padapter);
-		rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+		GetHwReg8192EU(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 		if (bMacPwrCtrlOn == _TRUE)
 			rtw_btcoex_PowerOnSetting(padapter);
 	}

@@ -356,7 +356,7 @@ void rtl8192e_download_rsvd_page(PADAPTER padapter, u8 mstatus)
 				yield();
 				/* mdelay(10); */
 				/* check rsvd page download OK. */
-				rtw_hal_get_hwreg(padapter, HW_VAR_BCN_VALID, (u8 *)(&bcn_valid));
+				GetHwReg8192EU(padapter, HW_VAR_BCN_VALID, (u8 *)(&bcn_valid));
 				poll++;
 			} while (!bcn_valid && (poll % 10) != 0 && !RTW_CANNOT_RUN(padapter));
 

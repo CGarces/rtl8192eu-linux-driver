@@ -4610,7 +4610,7 @@ unsigned int rtw_restructure_ht_ie(_adapter *padapter, u8 *in_ie, u8 *out_ie, ui
 	memcpy(ht_capie.mcs.rx_mask, pmlmeext->default_supported_mcs_set, 16);
 
 	/* update default supported_mcs_set */
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	rx_nss = rtw_min(rf_type_to_rf_rx_cnt(rf_type), hal_spec->rx_nss_num);
 
 	switch (rx_nss) {
@@ -4807,7 +4807,7 @@ void rtw_update_ht_cap(_adapter *padapter, u8 *pie, uint ie_len, u8 channel)
 		u8	rf_type = RF_1T1R;
 		u8 tx_nss = 0;
 
-		rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+		GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 		tx_nss = rtw_min(rf_type_to_rf_tx_cnt(rf_type), hal_spec->tx_nss_num);
 
 		/* update the MCS set */

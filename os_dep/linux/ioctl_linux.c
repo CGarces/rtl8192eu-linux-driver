@@ -10283,7 +10283,7 @@ static int rtw_tdls_ch_switch(struct net_device *dev,
 
 	rtw_pm_set_lps(padapter, PS_MODE_ACTIVE);
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
+	GetHwReg8192EU(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
 	if (take_care_iqk == _TRUE) {
 		u8 central_chnl;
 		u8 bw_mode;

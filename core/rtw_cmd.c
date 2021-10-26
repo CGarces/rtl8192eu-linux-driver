@@ -4086,11 +4086,11 @@ static void rtw_chk_hi_queue_hdl(_adapter *padapter)
 	if (!psta_bmc)
 		return;
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
+	GetHwReg8192EU(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
 
 	while (_FALSE == empty && rtw_get_passing_time_ms(start) < rtw_get_wait_hiq_empty_ms()) {
 		msleep(100);
-		rtw_hal_get_hwreg(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
+		GetHwReg8192EU(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
 	}
 
 	if (psta_bmc->sleepq_len == 0) {

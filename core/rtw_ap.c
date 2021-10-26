@@ -2189,7 +2189,7 @@ int rtw_check_beacon_data(_adapter *padapter, u8 *pbuf,  int len)
 				u8 rx_nss = 0;
 				int i;
 
-				rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+				GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 				rx_nss = rtw_min(rf_type_to_rf_rx_cnt(rf_type), hal_spec->rx_nss_num);
 
 				/* RX MCS Bitmask */

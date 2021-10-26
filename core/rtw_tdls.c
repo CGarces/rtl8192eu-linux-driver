@@ -577,7 +577,7 @@ void rtw_tdls_process_vht_cap(_adapter *padapter, struct sta_info *ptdls_sta, u8
 	ptdls_sta->vhtpriv.ampdu_len = GET_VHT_CAPABILITY_ELE_MAX_RXAMPDU_FACTOR(data);
 
 	pcap_mcs = GET_VHT_CAPABILITY_ELE_RX_MCS(data);
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	tx_nss = rtw_min(rf_type_to_rf_tx_cnt(rf_type), hal_spec->tx_nss_num);
 	rtw_vht_nss_to_mcsmap(tx_nss, ptdls_sta->vhtpriv.vht_mcs_map, pcap_mcs);
 	ptdls_sta->vhtpriv.vht_highest_rate = rtw_get_vht_highest_rate(ptdls_sta->vhtpriv.vht_mcs_map);
@@ -1003,7 +1003,7 @@ s32 rtw_tdls_do_ch_sw(_adapter *padapter, struct sta_info *ptdls_sta, u8 chnl_ty
 
 			_exit_critical_mutex(&(adapter_to_dvobj(padapter)->setch_mutex), NULL);
 
-			rtw_hal_get_hwreg(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
+			GetHwReg8192EU(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
 			if (take_care_iqk == _TRUE)
 				rtw_hal_ch_sw_iqk_info_restore(padapter, CH_SW_USE_CASE_TDLS);
 
@@ -2547,7 +2547,7 @@ sint On_TDLS_Ch_Switch_Req(_adapter *padapter, union recv_frame *precv_frame, st
 		j += (pIE->Length + 2);
 	}
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
+	GetHwReg8192EU(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
 	if (take_care_iqk == _TRUE) {
 		u8 central_chnl;
 		u8 bw_mode;

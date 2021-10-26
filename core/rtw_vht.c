@@ -318,7 +318,7 @@ void	rtw_vht_use_default_setting(_adapter *padapter)
 
 	pvhtpriv->ampdu_len = pregistrypriv->ampdu_factor;
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	tx_nss = rtw_min(rf_type_to_rf_tx_cnt(rf_type), hal_spec->tx_nss_num);
 	rx_nss = rtw_min(rf_type_to_rf_rx_cnt(rf_type), hal_spec->rx_nss_num);
 
@@ -667,7 +667,7 @@ void VHT_caps_handler(_adapter *padapter, PNDIS_802_11_VARIABLE_IEs pIE)
 	pvhtpriv->ampdu_len = GET_VHT_CAPABILITY_ELE_MAX_RXAMPDU_FACTOR(pIE->data);
 
 	pcap_mcs = GET_VHT_CAPABILITY_ELE_RX_MCS(pIE->data);
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	tx_nss = rtw_min(rf_type_to_rf_tx_cnt(rf_type), hal_spec->tx_nss_num);
 	rtw_vht_nss_to_mcsmap(tx_nss, pvhtpriv->vht_mcs_map, pcap_mcs);
 	pvhtpriv->vht_highest_rate = rtw_get_vht_highest_rate(pvhtpriv->vht_mcs_map);
@@ -702,7 +702,7 @@ void rtw_process_vht_op_mode_notify(_adapter *padapter, u8 *pframe, PVOID sta)
 
 	target_bw = GET_VHT_OPERATING_MODE_FIELD_CHNL_WIDTH(pframe);
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+	GetHwReg8192EU(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 	tx_nss = rtw_min(rf_type_to_rf_tx_cnt(rf_type), hal_spec->tx_nss_num);
 	target_rxss = rtw_min(tx_nss, (GET_VHT_OPERATING_MODE_FIELD_RX_NSS(pframe) + 1));
 

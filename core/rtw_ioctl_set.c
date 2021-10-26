@@ -686,7 +686,7 @@ u16 rtw_get_cur_max_rate(_adapter *adapter)
 
 #ifdef CONFIG_80211N_HT
 	if (is_supported_ht(psta->wireless_mode)) {
-		rtw_hal_get_hwreg(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+		GetHwReg8192EU(adapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
 		max_rate = rtw_mcs_rate(rf_type
 			, (psta->cmn.bw_mode == CHANNEL_WIDTH_40) ? 1 : 0
 			, short_GI

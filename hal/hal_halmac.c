@@ -3360,7 +3360,7 @@ static int _drv_enable_trx(struct dvobj_priv *d)
 /*
  * Notices:
  *	Make sure
- *	1. rtw_hal_get_hwreg(HW_VAR_RF_TYPE)
+ *	1. GetHwReg8192EU(HW_VAR_RF_TYPE)
  *	2. HAL_DATA_TYPE.rfe_type
  *	already ready for use before calling this function.
  */
@@ -3459,7 +3459,7 @@ int rtw_halmac_init_hal(struct dvobj_priv *d)
 /*
  * Notices:
  *	Make sure
- *	1. rtw_hal_get_hwreg(HW_VAR_RF_TYPE)
+ *	1. GetHwReg8192EU(HW_VAR_RF_TYPE)
  *	2. HAL_DATA_TYPE.rfe_type
  *	already ready for use before calling this function.
  */
@@ -3471,7 +3471,7 @@ int rtw_halmac_init_hal_fw(struct dvobj_priv *d, u8 *fw, u32 fwsize)
 /*
  * Notices:
  *	Make sure
- *	1. rtw_hal_get_hwreg(HW_VAR_RF_TYPE)
+ *	1. GetHwReg8192EU(HW_VAR_RF_TYPE)
  *	2. HAL_DATA_TYPE.rfe_type
  *	already ready for use before calling this function.
  */

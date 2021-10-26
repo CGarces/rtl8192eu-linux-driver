@@ -217,7 +217,7 @@ rtl8192e_HalDmWatchDog(
 
 #ifdef CONFIG_LPS
 	bFwCurrentInPSMode = pwrpriv->bFwCurrentInPSMode;
-	rtw_hal_get_hwreg(Adapter, HW_VAR_FWLPS_RF_ON, &bFwPSAwake);
+	GetHwReg8192EU(Adapter, HW_VAR_FWLPS_RF_ON, &bFwPSAwake);
 #endif
 
 #ifdef CONFIG_P2P_PS

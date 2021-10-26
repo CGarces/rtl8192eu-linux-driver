@@ -109,7 +109,7 @@ u8 HalPwrSeqCmdParsing(
 				bPollingBit = _FALSE;
 				offset = GET_PWR_CFG_OFFSET(PwrCfgCmd);
 
-				rtw_hal_get_hwreg(padapter, HW_VAR_PWR_CMD, &bHWICSupport);
+				GetHwReg8192EU(padapter, HW_VAR_PWR_CMD, &bHWICSupport);
 				if (bHWICSupport && offset == 0x06) {
 					flag = 0;
 					maxPollingCnt = 100000;

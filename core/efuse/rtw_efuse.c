@@ -2458,7 +2458,7 @@ u8 rtw_efuse_map_write(PADAPTER padapter, u16 addr, u16 cnts, u8 *data)
 	}
 
 	RTW_INFO("Total PG bytes Count = %d\n", chk_total_byte);
-	rtw_hal_get_hwreg(padapter, HW_VAR_EFUSE_BYTES, (u8 *)&startAddr);
+	GetHwReg8192EU(padapter, HW_VAR_EFUSE_BYTES, (u8 *)&startAddr);
 
 	if (startAddr == 0) {
 		startAddr = Efuse_GetCurrentSize(padapter, EFUSE_WIFI, _FALSE);

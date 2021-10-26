@@ -190,7 +190,7 @@ void rtw_hal_mcc_restore_iqk_val(PADAPTER padapter)
 	struct mcc_adapter_priv *mccadapriv = NULL;
 	u8 i = 0;
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
+	GetHwReg8192EU(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
 	if (take_care_iqk == _TRUE && MCC_EN(padapter)) {
 		for (i = 0; i < dvobj->iface_nums; i++) {
 			iface = dvobj->padapters[i];

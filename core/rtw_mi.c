@@ -841,7 +841,7 @@ static u8 _rtw_mi_hal_dump_macaddr(_adapter *padapter, void *data)
 {
 	u8 mac_addr[ETH_ALEN] = {0};
 
-	rtw_hal_get_hwreg(padapter, HW_VAR_MAC_ADDR, mac_addr);
+	GetHwReg8192EU(padapter, HW_VAR_MAC_ADDR, mac_addr);
 	RTW_INFO(ADPT_FMT"MAC Address ="MAC_FMT"\n", ADPT_ARG(padapter), MAC_ARG(mac_addr));
 	return _TRUE;
 }

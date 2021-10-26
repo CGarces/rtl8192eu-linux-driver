@@ -10735,7 +10735,7 @@ unsigned int send_beacon(_adapter *padapter)
 				#else
 				yield();
 				#endif
-				rtw_hal_get_hwreg(padapter, HW_VAR_BCN_VALID, (u8 *)(&bxmitok));
+				GetHwReg8192EU(padapter, HW_VAR_BCN_VALID, (u8 *)(&bxmitok));
 				poll++;
 			} while ((poll % 10) != 0 && _FALSE == bxmitok && !RTW_CANNOT_RUN(padapter));
 			#if defined(CONFIG_PCI_BCN_POLLING)
@@ -14761,7 +14761,7 @@ void sitesurvey_set_msr(_adapter *adapter, bool enter)
 
 	if (enter) {
 #ifdef CONFIG_MI_WITH_MBSSID_CAM
-		rtw_hal_get_hwreg(adapter, HW_VAR_MEDIA_STATUS, (u8 *)(&pmlmeinfo->hw_media_state));
+		GetHwReg8192EU(adapter, HW_VAR_MEDIA_STATUS, (u8 *)(&pmlmeinfo->hw_media_state));
 #endif
 		/* set MSR to no link state */
 		network_type = _HW_STATE_NOLINK_;

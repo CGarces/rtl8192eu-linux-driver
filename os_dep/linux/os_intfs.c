@@ -4605,7 +4605,7 @@ int rtw_suspend_common(_adapter *padapter)
 #ifdef CONFIG_IOL_READ_EFUSE_MAP
 	if (!padapter->bup) {
 		u8 bMacPwrCtrlOn = _FALSE;
-		rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+		GetHwReg8192EU(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 		if (bMacPwrCtrlOn)
 			rtw_hal_power_off(padapter);
 	}
