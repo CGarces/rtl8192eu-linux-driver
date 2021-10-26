@@ -1140,13 +1140,13 @@ void rtw_hal_hw_port_enable(_adapter *adapter)
 {
 	u8 port_enable = _TRUE;
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_PORT_CFG, &port_enable);
+	SetHwReg8192EU(adapter, HW_VAR_PORT_CFG, &port_enable);
 }
 void rtw_hal_hw_port_disable(_adapter *adapter)
 {
 	u8 port_enable = _FALSE;
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_PORT_CFG, &port_enable);
+	SetHwReg8192EU(adapter, HW_VAR_PORT_CFG, &port_enable);
 }
 
 void rtw_restore_hw_port_cfg(_adapter *adapter)
@@ -1179,7 +1179,7 @@ void rtw_mi_set_mac_addr(_adapter *adapter)
 	for (i = 0; i < dvobj->iface_nums; i++) {
 		iface = dvobj->padapters[i];
 		if (iface)
-			rtw_hal_set_hwreg(iface, HW_VAR_MAC_ADDR, adapter_mac_addr(iface));
+			SetHwReg8192EU(iface, HW_VAR_MAC_ADDR, adapter_mac_addr(iface));
 	}
 #endif
 	rtw_hal_dump_macaddr(RTW_DBGDUMP, adapter);
@@ -2741,12 +2741,12 @@ static void write_mbssid_cam(_adapter *padapter, u8 cam_addr, u8 *mac)
 	cam_val[0] = (mac[3] << 24) | (mac[2] << 16) | (mac[1] << 8) | mac[0];
 	cam_val[1] = ((cam_addr & MBIDCAM_ADDR_MASK) << MBIDCAM_ADDR_SHIFT)  | (mac[5] << 8) | mac[4];
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_MBSSID_CAM_WRITE, (u8 *)cam_val);
+	SetHwReg8192EU(padapter, HW_VAR_MBSSID_CAM_WRITE, (u8 *)cam_val);
 }
 
 static void clear_mbssid_cam(_adapter *padapter, u8 cam_addr)
 {
-	rtw_hal_set_hwreg(padapter, HW_VAR_MBSSID_CAM_CLEAR, &cam_addr);
+	SetHwReg8192EU(padapter, HW_VAR_MBSSID_CAM_CLEAR, &cam_addr);
 }
 
 void rtw_ap_set_mbid_num(_adapter *adapter, u8 ap_num)
@@ -3405,7 +3405,7 @@ inline u8 rtw_hal_rcr_add(_adapter *adapter, u32 add)
 	GetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 	rcr |= add;
 	if (rcr != hal->ReceiveConfig)
-		ret = rtw_hal_set_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
+		ret = SetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 
 	return ret;
 }
@@ -3421,7 +3421,7 @@ inline u8 rtw_hal_rcr_clear(_adapter *adapter, u32 clear)
 	GetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 	rcr &= ~clear;
 	if (rcr != hal->ReceiveConfig)
-		ret = rtw_hal_set_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr);
+		ret = SetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr);
 
 	return ret;
 }
@@ -3535,7 +3535,7 @@ void rtw_hal_rcr_set_chk_bssid(_adapter *adapter, u8 self_action)
 		&& (rcr & RCR_CBSSID_BCN) && !(rcr_new & RCR_CBSSID_BCN))
 		rtw_hal_tsf_update_pause(adapter);
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_RCR, (u8 *)&rcr_new);
+	SetHwReg8192EU(adapter, HW_VAR_RCR, (u8 *)&rcr_new);
 
 	if (!hal_spec->rx_tsf_filter
 		&& !(rcr & RCR_CBSSID_BCN) && (rcr_new & RCR_CBSSID_BCN)
@@ -3882,7 +3882,7 @@ s32 rtw_set_ps_rsvd_page(_adapter *adapter)
 	if (adapter->iface_id == pwrctl->fw_psmode_iface_id)
 		return ret;
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_H2C_FW_JOINBSSRPT,
+	SetHwReg8192EU(adapter, HW_VAR_H2C_FW_JOINBSSRPT,
 			  (u8 *)&media_status_rpt);
 
 	return ret;
@@ -4066,9 +4066,9 @@ s32 rtw_hal_set_FwMediaStatusRpt_cmd(_adapter *adapter, bool opmode, bool miraca
 
 		/* 8188E FW doesn't set macid no link, driver does it by self */
 		if (opmode)
-			rtw_hal_set_hwreg(adapter, HW_VAR_MACID_LINK, &macid);
+			SetHwReg8192EU(adapter, HW_VAR_MACID_LINK, &macid);
 		else
-			rtw_hal_set_hwreg(adapter, HW_VAR_MACID_NOLINK, &macid);
+			SetHwReg8192EU(adapter, HW_VAR_MACID_NOLINK, &macid);
 
 		/* for 8188E RA */
 #if (RATE_ADAPTIVE_SUPPORT == 1)
@@ -4076,7 +4076,7 @@ s32 rtw_hal_set_FwMediaStatusRpt_cmd(_adapter *adapter, bool opmode, bool miraca
 			u8 max_macid;
 
 			max_macid = rtw_search_max_mac_id(adapter);
-			rtw_hal_set_hwreg(adapter, HW_VAR_TX_RPT_MAX_MACID, &max_macid);
+			SetHwReg8192EU(adapter, HW_VAR_TX_RPT_MAX_MACID, &max_macid);
 		}
 #endif
 	}
@@ -4153,7 +4153,7 @@ void rtw_hal_switch_gpio_wl_ctrl(_adapter *padapter, u8 index, u8 enable)
 
 	if (IS_8723D_SERIES(pHalData->version_id) || IS_8192F_SERIES(pHalData->version_id)
 		|| IS_8822B_SERIES(pHalData->version_id) || IS_8821C_SERIES(pHalData->version_id))
-			rtw_hal_set_hwreg(padapter, HW_SET_GPIO_WL_CTRL, (u8 *)(&enable));
+			SetHwReg8192EU(padapter, HW_SET_GPIO_WL_CTRL, (u8 *)(&enable));
 	/*
 	* Switch GPIO_13, GPIO_14 to wlan control, or pull GPIO_13,14 MUST fail.
 	* It happended at 8723B/8192E/8821A. New IC will check multi function GPIO,
@@ -4167,13 +4167,13 @@ void rtw_hal_switch_gpio_wl_ctrl(_adapter *padapter, u8 index, u8 enable)
 		&& (!IS_HW_LED_STRATEGY(rtw_led_get_strategy(padapter)) || enable)
 		#endif
 	)
-		rtw_hal_set_hwreg(padapter, HW_SET_GPIO_WL_CTRL, (u8 *)(&enable));
+		SetHwReg8192EU(padapter, HW_SET_GPIO_WL_CTRL, (u8 *)(&enable));
 }
 
 void rtw_hal_set_output_gpio(_adapter *padapter, u8 index, u8 outputval)
 {
 #if defined(CONFIG_RTL8192F)
-	rtw_hal_set_hwreg(padapter, HW_VAR_WOW_OUTPUT_GPIO, (u8 *)(&index));
+	SetHwReg8192EU(padapter, HW_VAR_WOW_OUTPUT_GPIO, (u8 *)(&index));
 #else
 	if (index <= 7) {
 		/* config GPIO mode */
@@ -4229,7 +4229,7 @@ void rtw_hal_set_output_gpio(_adapter *padapter, u8 index, u8 outputval)
 void rtw_hal_set_input_gpio(_adapter *padapter, u8 index)
 {
 #if defined(CONFIG_RTL8192F)
-	rtw_hal_set_hwreg(padapter, HW_VAR_WOW_INPUT_GPIO, (u8 *)(&index));
+	SetHwReg8192EU(padapter, HW_VAR_WOW_INPUT_GPIO, (u8 *)(&index));
 #else
 	if (index <= 7) {
 		/* config GPIO mode */
@@ -5572,7 +5572,7 @@ static void rtw_hal_ap_wow_enable(_adapter *padapter)
 	rtw_hal_fw_dl(padapter, _TRUE);
 
 	media_status_rpt = RT_MEDIA_CONNECT;
-	rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_JOINBSSRPT,
+	SetHwReg8192EU(padapter, HW_VAR_H2C_FW_JOINBSSRPT,
 			  (u8 *)&media_status_rpt);
 
 	issue_beacon(padapter, 0);
@@ -5671,7 +5671,7 @@ static void rtw_hal_ap_wow_disable(_adapter *padapter)
 #endif
 	media_status_rpt = RT_MEDIA_CONNECT;
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_JOINBSSRPT,
+	SetHwReg8192EU(padapter, HW_VAR_H2C_FW_JOINBSSRPT,
 			  (u8 *)&media_status_rpt);
 
 	issue_beacon(padapter, 0);
@@ -9026,7 +9026,7 @@ static void rtw_hal_wow_enable(_adapter *adapter)
 		media_status_rpt = RT_MEDIA_DISCONNECT;
 	else
 		media_status_rpt = RT_MEDIA_CONNECT;
-	rtw_hal_set_hwreg(adapter, HW_VAR_H2C_FW_JOINBSSRPT,
+	SetHwReg8192EU(adapter, HW_VAR_H2C_FW_JOINBSSRPT,
 			  (u8 *)&media_status_rpt);
 
 	/* RX DMA stop */
@@ -9254,7 +9254,7 @@ static void rtw_hal_wow_disable(_adapter *adapter)
 	    (pwrctl->wowlan_wake_reason != RX_DEAUTH)) {
 
 		media_status_rpt = RT_MEDIA_CONNECT;
-		rtw_hal_set_hwreg(adapter, HW_VAR_H2C_FW_JOINBSSRPT,
+		SetHwReg8192EU(adapter, HW_VAR_H2C_FW_JOINBSSRPT,
 				  (u8 *)&media_status_rpt);
 
 		if (psta != NULL) {
@@ -12494,7 +12494,7 @@ void dm_DynamicUsbTxAgg(_adapter *padapter, u8 from_timer)
 
 #ifdef RTW_HALMAC
 	if (IS_HARDWARE_TYPE_8822BU(padapter) || IS_HARDWARE_TYPE_8821CU(padapter))
-		rtw_hal_set_hwreg(padapter, HW_VAR_RXDMA_AGG_PG_TH, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_RXDMA_AGG_PG_TH, NULL);
 #else /* !RTW_HALMAC */
 	if (IS_HARDWARE_TYPE_8821U(padapter)) { /* || IS_HARDWARE_TYPE_8192EU(padapter)) */
 		/* This AGG_PH_TH only for UsbRxAggMode == USB_RX_AGG_USB */
@@ -12826,14 +12826,14 @@ void rtw_hal_ch_sw_iqk_info_backup(_adapter *padapter)
 	/* If it's an existed record, overwrite it */
 	res = rtw_hal_ch_sw_iqk_info_search(padapter, pHalData->current_channel, pHalData->current_channel_bw);
 	if ((res >= 0) && (res < MAX_IQK_INFO_BACKUP_CHNL_NUM)) {
-		rtw_hal_set_hwreg(padapter, HW_VAR_CH_SW_IQK_INFO_BACKUP, (u8 *)&(pHalData->iqk_reg_backup[res]));
+		SetHwReg8192EU(padapter, HW_VAR_CH_SW_IQK_INFO_BACKUP, (u8 *)&(pHalData->iqk_reg_backup[res]));
 		return;
 	}
 
 	/* Search for the empty record to use */
 	for (i = 0; i < MAX_IQK_INFO_BACKUP_CHNL_NUM; i++) {
 		if (pHalData->iqk_reg_backup[i].central_chnl == 0) {
-			rtw_hal_set_hwreg(padapter, HW_VAR_CH_SW_IQK_INFO_BACKUP, (u8 *)&(pHalData->iqk_reg_backup[i]));
+			SetHwReg8192EU(padapter, HW_VAR_CH_SW_IQK_INFO_BACKUP, (u8 *)&(pHalData->iqk_reg_backup[i]));
 			return;
 		}
 	}
@@ -12842,12 +12842,12 @@ void rtw_hal_ch_sw_iqk_info_backup(_adapter *padapter)
 	for (i = 1; i < MAX_IQK_INFO_BACKUP_CHNL_NUM; i++)
 		memcpy(&(pHalData->iqk_reg_backup[i - 1]), &(pHalData->iqk_reg_backup[i]), sizeof(struct hal_iqk_reg_backup));
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_CH_SW_IQK_INFO_BACKUP, (u8 *)&(pHalData->iqk_reg_backup[MAX_IQK_INFO_BACKUP_CHNL_NUM - 1]));
+	SetHwReg8192EU(padapter, HW_VAR_CH_SW_IQK_INFO_BACKUP, (u8 *)&(pHalData->iqk_reg_backup[MAX_IQK_INFO_BACKUP_CHNL_NUM - 1]));
 }
 
 void rtw_hal_ch_sw_iqk_info_restore(_adapter *padapter, u8 ch_sw_use_case)
 {
-	rtw_hal_set_hwreg(padapter, HW_VAR_CH_SW_IQK_INFO_RESTORE, &ch_sw_use_case);
+	SetHwReg8192EU(padapter, HW_VAR_CH_SW_IQK_INFO_RESTORE, &ch_sw_use_case);
 }
 
 void rtw_dump_mac_rx_counters(_adapter *padapter, struct dbg_rx_counter *rx_counter)
@@ -13187,7 +13187,7 @@ void rtw_set_rts_bw(_adapter *padapter) {
 	}
 	
 		RTW_INFO("%s connect_to_8812=%d,enable=%u\n", __FUNCTION__,connect_to_8812,enable);
-		rtw_hal_set_hwreg(padapter, HW_VAR_SET_RTS_BW, &enable);
+		SetHwReg8192EU(padapter, HW_VAR_SET_RTS_BW, &enable);
 }
 #endif/*CONFIG_RTS_FULL_BW*/
 

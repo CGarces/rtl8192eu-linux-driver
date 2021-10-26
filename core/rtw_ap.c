@@ -1268,15 +1268,15 @@ static void rtw_set_hw_wmm_param(_adapter *padapter)
 
 		TXOP = 0;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
 
 		ECWMin = 2;
 		ECWMax = 3;
 		TXOP = 0x2f;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
 
 	} else {
 		edca[0] = edca[1] = edca[2] = edca[3] = 0;
@@ -1290,7 +1290,7 @@ static void rtw_set_hw_wmm_param(_adapter *padapter)
 		ECWMax = 10;
 		TXOP = 0;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
 		edca[XMIT_BK_QUEUE] = acParm;
 		RTW_INFO("WMM(BK): %x\n", acParm);
 
@@ -1300,7 +1300,7 @@ static void rtw_set_hw_wmm_param(_adapter *padapter)
 		ECWMax = 6;
 		TXOP = 0;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
 		edca[XMIT_BE_QUEUE] = acParm;
 		RTW_INFO("WMM(BE): %x\n", acParm);
 
@@ -1310,7 +1310,7 @@ static void rtw_set_hw_wmm_param(_adapter *padapter)
 		ECWMax = 4;
 		TXOP = 94;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
 		edca[XMIT_VI_QUEUE] = acParm;
 		RTW_INFO("WMM(VI): %x\n", acParm);
 
@@ -1320,13 +1320,13 @@ static void rtw_set_hw_wmm_param(_adapter *padapter)
 		ECWMax = 3;
 		TXOP = 47;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
 		edca[XMIT_VO_QUEUE] = acParm;
 		RTW_INFO("WMM(VO): %x\n", acParm);
 
 
 		if (padapter->registrypriv.acm_method == 1)
-			rtw_hal_set_hwreg(padapter, HW_VAR_ACM_CTRL, (u8 *)(&acm_mask));
+			SetHwReg8192EU(padapter, HW_VAR_ACM_CTRL, (u8 *)(&acm_mask));
 		else
 			padapter->mlmepriv.acm_mask = acm_mask;
 
@@ -1393,9 +1393,9 @@ static void update_hw_ht_param(_adapter *padapter)
 
 	min_MPDU_spacing = (pmlmeinfo->HT_caps.u.HT_cap_element.AMPDU_para & 0x1c) >> 2;
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_AMPDU_MIN_SPACE, (u8 *)(&min_MPDU_spacing));
+	SetHwReg8192EU(padapter, HW_VAR_AMPDU_MIN_SPACE, (u8 *)(&min_MPDU_spacing));
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_AMPDU_FACTOR, (u8 *)(&max_AMPDU_len));
+	SetHwReg8192EU(padapter, HW_VAR_AMPDU_FACTOR, (u8 *)(&max_AMPDU_len));
 
 	/*  */
 	/* Config SM Power Save setting */
@@ -1518,7 +1518,7 @@ void rtw_start_bss_hdl_after_chbw_decided(_adapter *adapter)
 
 	/* update RRSR and RTS_INIT_RATE register after set channel and bandwidth */
 	UpdateBrateTbl(adapter, pnetwork->SupportedRates);
-	rtw_hal_set_hwreg(adapter, HW_VAR_BASIC_RATE, pnetwork->SupportedRates);
+	SetHwReg8192EU(adapter, HW_VAR_BASIC_RATE, pnetwork->SupportedRates);
 
 	/* update capability after cur_wireless_mode updated */
 	update_capinfo(adapter, rtw_get_capability(pnetwork));
@@ -1670,14 +1670,14 @@ void start_bss_network(_adapter *padapter, struct createbss_parm *parm)
 	Set_MSR(padapter, _HW_STATE_AP_);
 
 	/* Set BSSID REG */
-	rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, pnetwork->MacAddress);
+	SetHwReg8192EU(padapter, HW_VAR_BSSID, pnetwork->MacAddress);
 
 	/* Set Security */
 	val8 = (psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) ? 0xcc : 0xcf;
-	rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
+	SetHwReg8192EU(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
 
 	/* Beacon Control related register */
-	rtw_hal_set_hwreg(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&bcn_interval));
+	SetHwReg8192EU(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&bcn_interval));
 
 	rtw_hal_rcr_set_chk_bssid(padapter, mlme_act);
 
@@ -1728,7 +1728,7 @@ chbw_decision:
 
 	if (!IS_CH_WAITING(adapter_to_rfctl(padapter))) {
 		doiqk = _TRUE;
-		rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
+		SetHwReg8192EU(padapter , HW_VAR_DO_IQK , &doiqk);
 	}
 
 	if (ch_to_set != 0) {
@@ -1737,7 +1737,7 @@ chbw_decision:
 	}
 
 	doiqk = _FALSE;
-	rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
+	SetHwReg8192EU(padapter , HW_VAR_DO_IQK , &doiqk);
 
 #ifdef CONFIG_MCC_MODE
 	/* after set_channel_bwmode for backup IQK */
@@ -1817,7 +1817,7 @@ update_beacon:
 
 		#ifdef CONFIG_SWTIMER_BASED_TXBCN
 		rtw_ap_set_mbid_num(padapter, pdvobj->nr_ap_if);
-		rtw_hal_set_hwreg(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&pdvobj->inter_bcn_space));
+		SetHwReg8192EU(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&pdvobj->inter_bcn_space));
 		#endif /*CONFIG_SWTIMER_BASED_TXBCN*/
 
 #endif /*CONFIG_SUPPORT_MULTI_BCN*/
@@ -4108,7 +4108,7 @@ void stop_ap_mode(_adapter *padapter)
 		#endif
 
 		#ifdef CONFIG_SWTIMER_BASED_TXBCN
-		rtw_hal_set_hwreg(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&pdvobj->inter_bcn_space));
+		SetHwReg8192EU(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&pdvobj->inter_bcn_space));
 
 		if (pdvobj->nr_ap_if == 0)
 			_cancel_timer_ex(&pdvobj->txbcn_timer);

@@ -770,7 +770,7 @@ end_of_mp_start_test:
 		/* set msr to WIFI_FW_ADHOC_STATE */
 		pmlmeinfo->state = WIFI_FW_ADHOC_STATE;
 		Set_MSR(padapter, (pmlmeinfo->state & 0x3));
-		rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, padapter->registrypriv.dev_network.MacAddress);
+		SetHwReg8192EU(padapter, HW_VAR_BSSID, padapter->registrypriv.dev_network.MacAddress);
 		rtw_hal_rcr_set_chk_bssid(padapter, MLME_ADHOC_STARTED);
 		pmlmeinfo->state |= WIFI_FW_ASSOC_SUCCESS;
 	} else {
@@ -780,7 +780,7 @@ end_of_mp_start_test:
 			pmppriv->network_macaddr[0], pmppriv->network_macaddr[1], pmppriv->network_macaddr[2], pmppriv->network_macaddr[3], pmppriv->network_macaddr[4],
 				pmppriv->network_macaddr[5]);
 
-		rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, pmppriv->network_macaddr);
+		SetHwReg8192EU(padapter, HW_VAR_BSSID, pmppriv->network_macaddr);
 	}
 
 	return res;

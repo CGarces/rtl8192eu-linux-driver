@@ -1319,7 +1319,7 @@ Hal_EfuseReadEFuse8192E(
 	/* 5. Calculate Efuse utilization. */
 	/*  */
 	efuse_usage = (u1Byte)((eFuse_Addr * 100) / EFUSE_REAL_CONTENT_LEN_8192E);
-	rtw_hal_set_hwreg(Adapter, HW_VAR_EFUSE_BYTES, (u8 *)&eFuse_Addr);
+	SetHwReg8192EU(Adapter, HW_VAR_EFUSE_BYTES, (u8 *)&eFuse_Addr);
 
 exit:
 	if (efuseTbl)
@@ -1651,7 +1651,7 @@ hal_EfuseGetCurrentSize_8192E(IN	PADAPTER	pAdapter,
 		fakeEfuseUsedBytes = efuse_addr;
 		/* RTPRINT(FEEPROM, EFUSE_PG, ("hal_EfuseGetCurrentSize_8723A(), return %d\n", fakeEfuseUsedBytes)); */
 	} else {
-		rtw_hal_set_hwreg(pAdapter, HW_VAR_EFUSE_BYTES, (u8 *)&efuse_addr);
+		SetHwReg8192EU(pAdapter, HW_VAR_EFUSE_BYTES, (u8 *)&efuse_addr);
 		RTW_INFO("%s(), return %d\n", __func__, efuse_addr);
 	}
 
@@ -2431,7 +2431,7 @@ static void hw_var_set_monitor(PADAPTER Adapter, u8 variable, u8 *val)
 #endif
 
 		GetHwReg8192EU(Adapter, HW_VAR_RCR, (u8 *)&pHalData->rcr_backup);
-		rtw_hal_set_hwreg(Adapter, HW_VAR_RCR, (u8 *)&rcr_bits);
+		SetHwReg8192EU(Adapter, HW_VAR_RCR, (u8 *)&rcr_bits);
 
 		/* Receive all data frames */
 		value_rxfltmap2 = 0xFFFF;
@@ -2454,7 +2454,7 @@ static void hw_var_set_opmode(PADAPTER Adapter, u8 variable, u8 *val)
 
 	if (isMonitor == _TRUE) {
 		/* reset RCR from backup */
-		rtw_hal_set_hwreg(Adapter, HW_VAR_RCR, (u8 *)&pHalData->rcr_backup);
+		SetHwReg8192EU(Adapter, HW_VAR_RCR, (u8 *)&pHalData->rcr_backup);
 		rtw_hal_rcr_set_chk_bssid(Adapter, MLME_ACTION_NONE);
 		isMonitor = _FALSE;
 	}
@@ -2471,7 +2471,7 @@ static void hw_var_set_opmode(PADAPTER Adapter, u8 variable, u8 *val)
 		return;
 	}
 
-	rtw_hal_set_hwreg(Adapter, HW_VAR_MAC_ADDR, adapter_mac_addr(Adapter)); /* set mac addr to mac register */
+	SetHwReg8192EU(Adapter, HW_VAR_MAC_ADDR, adapter_mac_addr(Adapter)); /* set mac addr to mac register */
 
 #ifdef CONFIG_CONCURRENT_MODE
 	if (Adapter->hw_port == HW_PORT1) {
@@ -2555,7 +2555,7 @@ static void hw_var_set_opmode(PADAPTER Adapter, u8 variable, u8 *val)
 
 			/* SW_BCN_SEL - Port1 */
 			/* rtw_write8(Adapter, REG_DWBCN1_CTRL_8192E+2, rtw_read8(Adapter, REG_DWBCN1_CTRL_8192E+2)|BIT4); */
-			rtw_hal_set_hwreg(Adapter, HW_VAR_DL_BCN_SEL, NULL);
+			SetHwReg8192EU(Adapter, HW_VAR_DL_BCN_SEL, NULL);
 
 			/* select BCN on port 1 */
 			rtw_write8(Adapter, REG_CCK_CHECK_8192E,
@@ -2673,7 +2673,7 @@ static void hw_var_set_opmode(PADAPTER Adapter, u8 variable, u8 *val)
 
 			/* SW_BCN_SEL - Port0 */
 			/* rtw_write8(Adapter, REG_DWBCN1_CTRL_8192E+2, rtw_read8(Adapter, REG_DWBCN1_CTRL_8192E+2) & ~BIT4); */
-			rtw_hal_set_hwreg(Adapter, HW_VAR_DL_BCN_SEL, NULL);
+			SetHwReg8192EU(Adapter, HW_VAR_DL_BCN_SEL, NULL);
 
 			/* select BCN on port 0 */
 			rtw_write8(Adapter, REG_CCK_CHECK_8192E,
@@ -3005,7 +3005,7 @@ _InitWMACSetting_8192E(
 #if (1 == RTL8192E_RX_PACKET_INCLUDE_CRC)
 	rcr |= ACRC32;
 #endif
-	rtw_hal_set_hwreg(Adapter, HW_VAR_RCR, (u8 *)&rcr);
+	SetHwReg8192EU(Adapter, HW_VAR_RCR, (u8 *)&rcr);
 
 	/* Accept all multicast address */
 	rtw_write32(Adapter, REG_MAR, 0xFFFFFFFF);
@@ -3155,7 +3155,7 @@ void SetBeaconRelatedRegisters8192E(PADAPTER padapter)
 #endif
 
 	/* BCN interval */
-	rtw_hal_set_hwreg(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)&pmlmeinfo->bcn_interval);
+	SetHwReg8192EU(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)&pmlmeinfo->bcn_interval);
 
 	rtw_write8(padapter, REG_ATIMWND, 0x02);/* 2ms */
 

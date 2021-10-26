@@ -49,7 +49,7 @@ int rtw_fw_ps_state(PADAPTER padapter)
 		RTW_INFO("%s: fw_ps_state=%04x\n", __FUNCTION__, fw_ps_state);
 	}
 	#else
-	rtw_hal_set_hwreg(padapter, HW_VAR_SET_REQ_FW_PS, (u8 *)&dont_care);
+	SetHwReg8192EU(padapter, HW_VAR_SET_REQ_FW_PS, (u8 *)&dont_care);
 	{
 		/* 4. if 0x88[7]=1, driver set cmd to leave LPS/IPS. */
 		/* Else, hw will keep in active mode. */
@@ -558,7 +558,7 @@ u8 rtw_cpwm_polling(_adapter *adapter, u8 rpwm, u8 cpwm_orig)
 			cpwm_orig = cpwm_now;
 			rpwm &= ~PS_TOGGLE;
 			rpwm |= pwrpriv->tog;
-			rtw_hal_set_hwreg(adapter, HW_VAR_SET_RPWM, (u8 *)(&rpwm));
+			SetHwReg8192EU(adapter, HW_VAR_SET_RPWM, (u8 *)(&rpwm));
 			pwrpriv->tog += 0x80;
 		}
 	} while (pwrpriv->rpwm_retry++ < LPS_RPWM_RETRY_CNT && !RTW_CANNOT_RUN(adapter));
@@ -663,7 +663,7 @@ u8 rtw_set_rpwm(PADAPTER padapter, u8 pslv)
 	}
 #endif /* CONFIG_LPS_RPWM_TIMER & !CONFIG_DETECT_CPWM_BY_POLLING */
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_SET_RPWM, (u8 *)(&rpwm));
+	SetHwReg8192EU(padapter, HW_VAR_SET_RPWM, (u8 *)(&rpwm));
 
 	pwrpriv->tog += 0x80;
 
@@ -792,7 +792,7 @@ void rtw_set_fw_in_ips_mode(PADAPTER padapter, u8 enable)
 			RTW_INFO("%s: read rpwm=%02x\n", __FUNCTION__, val8);
 			val8 += 0x80;
 			val8 |= BIT(0);
-			rtw_hal_set_hwreg(padapter, HW_VAR_SET_RPWM, (u8 *)(&val8));
+			SetHwReg8192EU(padapter, HW_VAR_SET_RPWM, (u8 *)(&val8));
 			RTW_INFO("%s: write rpwm=%02x\n", __FUNCTION__, val8);
 			adapter_to_pwrctl(padapter)->tog = (val8 + 0x80) & 0x80;
 			cnt = val8 = 0;
@@ -824,7 +824,7 @@ void rtw_set_fw_in_ips_mode(PADAPTER padapter, u8 enable)
 		GetHwReg8192EU(padapter, HW_VAR_RPWM_TOG, &val8);
 		val8 += 0x80;
 		val8 |= BIT(6);
-		rtw_hal_set_hwreg(padapter, HW_VAR_SET_RPWM, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_SET_RPWM, (u8 *)(&val8));
 		RTW_INFO("%s: write rpwm=%02x\n", __FUNCTION__, val8);
 		adapter_to_pwrctl(padapter)->tog = (val8 + 0x80) & 0x80;
 
@@ -913,7 +913,7 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 	if ((PS_MODE_ACTIVE != ps_mode) && (pwrpriv->blpspg_info_up)) {
 		/*rtw_hal_set_lps_pg_info(padapter);*/
 		lps_pg_hdl_id = LPS_PG_INFO_CFG;
-		rtw_hal_set_hwreg(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
+		SetHwReg8192EU(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
 	}
 #endif
 
@@ -992,27 +992,27 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 #ifdef CONFIG_LPS_PG
 			if (pwrpriv->lps_level == LPS_PG) {
 				lps_pg_hdl_id = LPS_PG_REDLEMEM;
-				rtw_hal_set_hwreg(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
+				SetHwReg8192EU(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
 			}
 #endif
 #ifdef CONFIG_WOWLAN
 			if (pwrpriv->wowlan_mode == _TRUE)
-				rtw_hal_set_hwreg(padapter, HW_VAR_H2C_INACTIVE_IPS, (u8 *)(&ps_mode));
+				SetHwReg8192EU(padapter, HW_VAR_H2C_INACTIVE_IPS, (u8 *)(&ps_mode));
 #endif /* CONFIG_WOWLAN */
 
-			rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
-			rtw_hal_set_hwreg(padapter, HW_VAR_LPS_STATE_CHK, (u8 *)(&ps_mode));
+			SetHwReg8192EU(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
+			SetHwReg8192EU(padapter, HW_VAR_LPS_STATE_CHK, (u8 *)(&ps_mode));
 
 
 #ifdef CONFIG_LPS_PG
 			if (pwrpriv->lps_level == LPS_PG) {
 				lps_pg_hdl_id = LPS_PG_PHYDM_EN;
-				rtw_hal_set_hwreg(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
+				SetHwReg8192EU(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
 			}
 #endif
 
 #ifdef CONFIG_LPS_POFF
-			rtw_hal_set_hwreg(padapter, HW_VAR_LPS_POFF_SET_MODE,
+			SetHwReg8192EU(padapter, HW_VAR_LPS_POFF_SET_MODE,
 					  (u8 *)(&ps_mode));
 #endif /*CONFIG_LPS_POFF*/
 
@@ -1064,7 +1064,7 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 #endif /* CONFIG_BT_COEXIST */
 
 #ifdef CONFIG_LPS_POFF
-			rtw_hal_set_hwreg(padapter, HW_VAR_LPS_POFF_SET_MODE,
+			SetHwReg8192EU(padapter, HW_VAR_LPS_POFF_SET_MODE,
 					  (u8 *)(&ps_mode));
 #endif /*CONFIG_LPS_POFF*/
 
@@ -1075,7 +1075,7 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 #ifdef CONFIG_LPS_PG
 			if (pwrpriv->lps_level == LPS_PG) {
 				lps_pg_hdl_id = LPS_PG_PHYDM_DIS;
-				rtw_hal_set_hwreg(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
+				SetHwReg8192EU(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
 			}
 #endif
 
@@ -1085,10 +1085,10 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 			
 			
 			if (check_fwstate(pmlmepriv, _FW_LINKED))
-				rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
+				SetHwReg8192EU(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
 #ifdef CONFIG_WOWLAN
 			if (pwrpriv->wowlan_mode == _TRUE)
-				rtw_hal_set_hwreg(padapter, HW_VAR_H2C_INACTIVE_IPS, (u8 *)(&ps_mode));
+				SetHwReg8192EU(padapter, HW_VAR_H2C_INACTIVE_IPS, (u8 *)(&ps_mode));
 #endif /* CONFIG_WOWLAN */
 
 #ifdef CONFIG_P2P_PS
@@ -1595,7 +1595,7 @@ static void rpwmtimeout_workitem_callback(struct work_struct *work)
 	if (pwrpriv->rpwm_retry++ < LPS_RPWM_RETRY_CNT) {
 		u8 rpwm = (pwrpriv->rpwm | pwrpriv->tog | PS_ACK);
 
-		rtw_hal_set_hwreg(padapter, HW_VAR_SET_RPWM, (u8 *)(&rpwm));
+		SetHwReg8192EU(padapter, HW_VAR_SET_RPWM, (u8 *)(&rpwm));
 
 		pwrpriv->tog += 0x80;
 		_set_timer(&pwrpriv->pwr_rpwm_timer, LPS_CPWM_TIMEOUT_MS);
@@ -2163,7 +2163,7 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 	pwrctrlpriv->rpwm_retry = 0;
 
 #ifdef CONFIG_LPS_LCLK
-	rtw_hal_set_hwreg(padapter, HW_VAR_SET_RPWM, (u8 *)(&pwrctrlpriv->rpwm));
+	SetHwReg8192EU(padapter, HW_VAR_SET_RPWM, (u8 *)(&pwrctrlpriv->rpwm));
 
 	_init_workitem(&pwrctrlpriv->cpwm_event, cpwm_event_callback, NULL);
 
@@ -2237,7 +2237,7 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 #endif /* CONFIG_WOWLAN */
 
 #ifdef CONFIG_LPS_POFF
-	rtw_hal_set_hwreg(padapter, HW_VAR_LPS_POFF_INIT, 0);
+	SetHwReg8192EU(padapter, HW_VAR_LPS_POFF_INIT, 0);
 #endif
 
 
@@ -2265,7 +2265,7 @@ void rtw_free_pwrctrl_priv(PADAPTER adapter)
 #endif
 
 #ifdef CONFIG_LPS_POFF
-	rtw_hal_set_hwreg(adapter, HW_VAR_LPS_POFF_DEINIT, 0);
+	SetHwReg8192EU(adapter, HW_VAR_LPS_POFF_DEINIT, 0);
 #endif
 
 #ifdef CONFIG_LPS_LCLK

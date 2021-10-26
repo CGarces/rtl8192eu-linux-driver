@@ -1090,7 +1090,7 @@ static int rtw_set_wpa_ie(_adapter *padapter, char *pie, unsigned short ielen)
 	    || padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)
 		/* WPS open need to enable multicast
 		 * || check_fwstate(&padapter->mlmepriv, WIFI_UNDER_WPS) == _TRUE) */
-		rtw_hal_set_hwreg(padapter, HW_VAR_OFF_RCR_AM, null_addr);
+		SetHwReg8192EU(padapter, HW_VAR_OFF_RCR_AM, null_addr);
 
 
 exit:
@@ -3275,16 +3275,16 @@ static void rtw_dbg_mode_hdl(_adapter *padapter, u32 id, u8 *pdata, u32 len)
 		break;
 	case GEN_MP_IOCTL_SUBCODE(TRIGGER_GPIO):
 		RTW_INFO("==> trigger gpio 0\n");
-		rtw_hal_set_hwreg(padapter, HW_VAR_TRIGGER_GPIO_0, 0);
+		SetHwReg8192EU(padapter, HW_VAR_TRIGGER_GPIO_0, 0);
 		break;
 #ifdef CONFIG_BT_COEXIST
 	case GEN_MP_IOCTL_SUBCODE(SET_DM_BT):
 		RTW_INFO("==> set dm_bt_coexist:%x\n", *(u8 *)pdata);
-		rtw_hal_set_hwreg(padapter, HW_VAR_BT_SET_COEXIST, pdata);
+		SetHwReg8192EU(padapter, HW_VAR_BT_SET_COEXIST, pdata);
 		break;
 	case GEN_MP_IOCTL_SUBCODE(DEL_BA):
 		RTW_INFO("==> delete ba:%x\n", *(u8 *)pdata);
-		rtw_hal_set_hwreg(padapter, HW_VAR_BT_ISSUE_DELBA, pdata);
+		SetHwReg8192EU(padapter, HW_VAR_BT_ISSUE_DELBA, pdata);
 		break;
 #endif
 #ifdef DBG_CONFIG_ERROR_DETECT
@@ -7782,7 +7782,7 @@ static int rtw_wowlan_set_pattern(struct net_device *dev,
 			}
 		} else if (strncmp(input, "clean", 5) == 0) {
 			poidparam.subcode = WOWLAN_PATTERN_CLEAN;
-			rtw_hal_set_hwreg(padapter,
+			SetHwReg8192EU(padapter,
 					  HW_VAR_WOWLAN, (u8 *)&poidparam);
 		} else if (strncmp(input, "show", 4) == 0) {
 			rtw_wow_pattern_cam_dump(padapter);
@@ -9438,7 +9438,7 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 #ifdef CONFIG_MI_WITH_MBSSID_CAM
 		rtw_hal_change_macaddr_mbid(padapter, adapter_mac_addr(padapter));
 #else
-		rtw_hal_set_hwreg(padapter, HW_VAR_MAC_ADDR, adapter_mac_addr(padapter)); /* set mac addr to mac register */
+		SetHwReg8192EU(padapter, HW_VAR_MAC_ADDR, adapter_mac_addr(padapter)); /* set mac addr to mac register */
 #endif
 		/*pHalFunc->hal_deinit(padapter);*/
 		if (pHalFunc->hal_init(padapter) == _FAIL) {

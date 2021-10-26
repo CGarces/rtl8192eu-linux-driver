@@ -1250,7 +1250,7 @@ static int rtw_net_set_mac_address(struct net_device *pnetdev, void *addr)
 #ifdef CONFIG_MI_WITH_MBSSID_CAM
 	rtw_hal_change_macaddr_mbid(padapter, sa->sa_data);
 #else
-	rtw_hal_set_hwreg(padapter, HW_VAR_MAC_ADDR, sa->sa_data); /* set mac addr to mac register */
+	SetHwReg8192EU(padapter, HW_VAR_MAC_ADDR, sa->sa_data); /* set mac addr to mac register */
 #endif
 	rtw_ps_deny_cancel(padapter, PS_DENY_IOCTL);
 
@@ -3630,7 +3630,7 @@ void rtw_ips_dev_unload(_adapter *padapter)
 #endif /* #ifdef DBG_CONFIG_ERROR_DETECT */
 #endif /* defined(CONFIG_SWLPS_IN_IPS) || defined(CONFIG_FWLPS_IN_IPS) */
 	{
-		rtw_hal_set_hwreg(padapter, HW_VAR_FIFO_CLEARN_UP, 0);
+		SetHwReg8192EU(padapter, HW_VAR_FIFO_CLEARN_UP, 0);
 		rtw_intf_stop(padapter);
 	}
 
@@ -4381,12 +4381,12 @@ int rtw_suspend_wow(_adapter *padapter)
 #ifdef CONFIG_RUNTIME_PORT_SWITCH
 		if (rtw_port_switch_chk(padapter)) {
 			RTW_INFO(" ### PORT SWITCH ###\n");
-			rtw_hal_set_hwreg(padapter, HW_VAR_PORT_SWITCH, NULL);
+			SetHwReg8192EU(padapter, HW_VAR_PORT_SWITCH, NULL);
 		}
 #endif
 
 		poidparam.subcode = WOWLAN_ENABLE;
-		rtw_hal_set_hwreg(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
+		SetHwReg8192EU(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
 		if (rtw_chk_roam_flags(padapter, RTW_ROAM_ON_RESUME)) {
 			if (check_fwstate(pmlmepriv, WIFI_STATION_STATE)
 			    && check_fwstate(pmlmepriv, _FW_LINKED)) {
@@ -4491,12 +4491,12 @@ int rtw_suspend_ap_wow(_adapter *padapter)
 #ifdef CONFIG_RUNTIME_PORT_SWITCH
 	if (rtw_port_switch_chk(padapter)) {
 		RTW_INFO(" ### PORT SWITCH ###\n");
-		rtw_hal_set_hwreg(padapter, HW_VAR_PORT_SWITCH, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_PORT_SWITCH, NULL);
 	}
 #endif
 
 	poidparam.subcode = WOWLAN_AP_ENABLE;
-	rtw_hal_set_hwreg(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
+	SetHwReg8192EU(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
 
 	RTW_PRINT("%s: wowmode suspending\n", __func__);
 
@@ -4730,7 +4730,7 @@ int rtw_resume_process_wow(_adapter *padapter)
 
 		/* Disable WOW, set H2C command */
 		poidparam.subcode = WOWLAN_DISABLE;
-		rtw_hal_set_hwreg(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
+		SetHwReg8192EU(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
 
 #ifdef CONFIG_CONCURRENT_MODE
 		rtw_mi_buddy_reset_drv_sw(padapter);
@@ -4875,7 +4875,7 @@ int rtw_resume_process_ap_wow(_adapter *padapter)
 	#endif/*CONFIG_SDIO_HCI*/
 	/* Disable WOW, set H2C command */
 	poidparam.subcode = WOWLAN_AP_DISABLE;
-	rtw_hal_set_hwreg(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
+	SetHwReg8192EU(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
 	pwrpriv->wowlan_ap_mode = _FALSE;
 
 	rtw_clr_drv_stopped(padapter);

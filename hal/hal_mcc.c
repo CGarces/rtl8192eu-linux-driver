@@ -1432,7 +1432,7 @@ static void rtw_hal_set_fw_mcc_rsvd_page(PADAPTER padapter)
 
 	RTW_INFO(FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
-	rtw_hal_set_hwreg(port0_iface, HW_VAR_H2C_FW_JOINBSSRPT, (u8 *)(&mstatus));
+	SetHwReg8192EU(port0_iface, HW_VAR_H2C_FW_JOINBSSRPT, (u8 *)(&mstatus));
 
 	/* Re-Download beacon */
 	for (i = 0; i < MAX_MCC_NUM; i++) {
@@ -2045,7 +2045,7 @@ static u8 rtw_hal_set_mcc_start_setting(PADAPTER padapter, u8 status)
 	if (dvobj->p0_tsf.sync_port != MAX_HW_PORT ) {
 		/* disable tsf auto sync */
 		RTW_INFO("[MCC] disable HW TSF sync\n");
-		rtw_hal_set_hwreg(padapter, HW_VAR_TSF_AUTO_SYNC, &enable_tsf_auto_sync);
+		SetHwReg8192EU(padapter, HW_VAR_TSF_AUTO_SYNC, &enable_tsf_auto_sync);
 	} else {
 		RTW_INFO("[MCC] already disable HW TSF sync\n");
 	}

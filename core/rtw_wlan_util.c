@@ -400,7 +400,7 @@ void UpdateBrateTblForSoftAP(u8 *bssrateset, u32 bssratelen)
 }
 void Set_MSR(_adapter *padapter, u8 type)
 {
-	rtw_hal_set_hwreg(padapter, HW_VAR_MEDIA_STATUS, (u8 *)(&type));
+	SetHwReg8192EU(padapter, HW_VAR_MEDIA_STATUS, (u8 *)(&type));
 }
 
 inline u8 rtw_get_oper_ch(_adapter *adapter)
@@ -623,7 +623,7 @@ void set_channel_bwmode(_adapter *padapter, unsigned char channel, unsigned char
 		if (new_overlap_radar_detect_ch && IS_CH_WAITING(rfctl)) {
 			u8 pause = 0xFF;
 
-			rtw_hal_set_hwreg(padapter, HW_VAR_TXPAUSE, &pause);
+			SetHwReg8192EU(padapter, HW_VAR_TXPAUSE, &pause);
 		}
 #endif /* CONFIG_DFS_MASTER */
 
@@ -659,7 +659,7 @@ void set_channel_bwmode(_adapter *padapter, unsigned char channel, unsigned char
 			u8 pause = 0x00;
 
 			rtw_odm_radar_detect_disable(padapter);
-			rtw_hal_set_hwreg(padapter, HW_VAR_TXPAUSE, &pause);
+			SetHwReg8192EU(padapter, HW_VAR_TXPAUSE, &pause);
 		}
 	}
 #endif /* CONFIG_DFS_MASTER */
@@ -743,7 +743,7 @@ void CAM_empty_entry(
 	u8			ucIndex
 )
 {
-	rtw_hal_set_hwreg(Adapter, HW_VAR_CAM_EMPTY_ENTRY, (u8 *)(&ucIndex));
+	SetHwReg8192EU(Adapter, HW_VAR_CAM_EMPTY_ENTRY, (u8 *)(&ucIndex));
 }
 
 void invalidate_cam_all(_adapter *padapter)
@@ -753,7 +753,7 @@ void invalidate_cam_all(_adapter *padapter)
 	_irqL irqL;
 	u8 val8 = 0;
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_CAM_INVALID_ALL, &val8);
+	SetHwReg8192EU(padapter, HW_VAR_CAM_INVALID_ALL, &val8);
 
 	_enter_critical_bh(&cam_ctl->lock, &irqL);
 	rtw_sec_cam_map_clr_all(&cam_ctl->used);
@@ -1417,7 +1417,7 @@ void flush_all_cam_entry(_adapter *padapter)
 
 	invalidate_cam_all(padapter);
 	/* clear default key related key search setting */
-	rtw_hal_set_hwreg(padapter, HW_VAR_SEC_DK_CFG, (u8 *)_FALSE);
+	SetHwReg8192EU(padapter, HW_VAR_SEC_DK_CFG, (u8 *)_FALSE);
 #endif
 }
 
@@ -1519,15 +1519,15 @@ void WMMOnAssocRsp(_adapter *padapter)
 
 		TXOP = 0;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
 
 		ECWMin = 2;
 		ECWMax = 3;
 		TXOP = 0x2f;
 		acParm = AIFS | (ECWMin << 8) | (ECWMax << 12) | (TXOP << 16);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
 	} else {
 		edca[0] = edca[1] = edca[2] = edca[3] = 0;
 
@@ -1546,25 +1546,25 @@ void WMMOnAssocRsp(_adapter *padapter)
 
 			switch (ACI) {
 			case 0x0:
-				rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
+				SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
 				acm_mask |= (ACM ? BIT(1) : 0);
 				edca[XMIT_BE_QUEUE] = acParm;
 				break;
 
 			case 0x1:
-				rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
+				SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
 				/* acm_mask |= (ACM? BIT(0):0); */
 				edca[XMIT_BK_QUEUE] = acParm;
 				break;
 
 			case 0x2:
-				rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
+				SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
 				acm_mask |= (ACM ? BIT(2) : 0);
 				edca[XMIT_VI_QUEUE] = acParm;
 				break;
 
 			case 0x3:
-				rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
+				SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
 				acm_mask |= (ACM ? BIT(3) : 0);
 				edca[XMIT_VO_QUEUE] = acParm;
 				break;
@@ -1574,7 +1574,7 @@ void WMMOnAssocRsp(_adapter *padapter)
 		}
 
 		if (padapter->registrypriv.acm_method == 1)
-			rtw_hal_set_hwreg(padapter, HW_VAR_ACM_CTRL, (u8 *)(&acm_mask));
+			SetHwReg8192EU(padapter, HW_VAR_ACM_CTRL, (u8 *)(&acm_mask));
 		else
 			padapter->mlmepriv.acm_mask = acm_mask;
 
@@ -1622,7 +1622,7 @@ void WMMOnAssocRsp(_adapter *padapter)
 		/* if AP supports UAPSD function, driver must set each uapsd TID to coresponding mac register 0x693 */
 		if (pmlmeinfo->WMM_param.QoS_info & AP_SUPPORTED_UAPSD) {
 			pqospriv->uapsd_ap_supported = 1;
-			rtw_hal_set_hwreg(padapter, HW_VAR_UAPSD_TID, NULL);
+			SetHwReg8192EU(padapter, HW_VAR_UAPSD_TID, NULL);
 		}
 #endif /* CONFIG_WMMPS_STA */
 	}
@@ -2041,9 +2041,9 @@ void HTOnAssocRsp(_adapter *padapter)
 
 	min_MPDU_spacing = (pmlmeinfo->HT_caps.u.HT_cap_element.AMPDU_para & 0x1c) >> 2;
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_AMPDU_MIN_SPACE, (u8 *)(&min_MPDU_spacing));
+	SetHwReg8192EU(padapter, HW_VAR_AMPDU_MIN_SPACE, (u8 *)(&min_MPDU_spacing));
 #ifdef CONFIG_80211N_HT
-	rtw_hal_set_hwreg(padapter, HW_VAR_AMPDU_FACTOR, (u8 *)(&max_AMPDU_len));
+	SetHwReg8192EU(padapter, HW_VAR_AMPDU_FACTOR, (u8 *)(&max_AMPDU_len));
 #endif /* CONFIG_80211N_HT */
 
 }
@@ -2990,7 +2990,7 @@ void update_tx_basic_rate(_adapter *padapter, u8 wirelessmode)
 	else
 		update_mgnt_tx_rate(padapter, IEEE80211_OFDM_RATE_6MB);
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_BASIC_RATE, supported_rates);
+	SetHwReg8192EU(padapter, HW_VAR_BASIC_RATE, supported_rates);
 }
 
 unsigned char check_assoc_AP(u8 *pframe, uint len)
@@ -3186,14 +3186,14 @@ void update_capinfo(PADAPTER Adapter, u16 updateCap)
 			if (pmlmeinfo->preamble_mode != PREAMBLE_SHORT) { /* PREAMBLE_LONG or PREAMBLE_AUTO */
 				ShortPreamble = _TRUE;
 				pmlmeinfo->preamble_mode = PREAMBLE_SHORT;
-				rtw_hal_set_hwreg(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&ShortPreamble);
+				SetHwReg8192EU(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&ShortPreamble);
 			}
 		} else {
 			/* Long Preamble */
 			if (pmlmeinfo->preamble_mode != PREAMBLE_LONG) { /* PREAMBLE_SHORT or PREAMBLE_AUTO */
 				ShortPreamble = _FALSE;
 				pmlmeinfo->preamble_mode = PREAMBLE_LONG;
-				rtw_hal_set_hwreg(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&ShortPreamble);
+				SetHwReg8192EU(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&ShortPreamble);
 			}
 		}
 	}
@@ -3219,7 +3219,7 @@ void update_capinfo(PADAPTER Adapter, u16 updateCap)
 		}
 	}
 
-	rtw_hal_set_hwreg(Adapter, HW_VAR_SLOT_TIME, &pmlmeinfo->slotTime);
+	SetHwReg8192EU(Adapter, HW_VAR_SLOT_TIME, &pmlmeinfo->slotTime);
 
 }
 
@@ -3276,10 +3276,10 @@ void update_wireless_mode(_adapter *padapter)
 	SIFS_Timer = 0x0a0a0808; /* 0x0808->for CCK, 0x0a0a->for OFDM
                               * change this value if having IOT issues. */
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_RESP_SIFS, (u8 *)&SIFS_Timer);
+	SetHwReg8192EU(padapter, HW_VAR_RESP_SIFS, (u8 *)&SIFS_Timer);
 #endif
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_WIRELESS_MODE, (u8 *)&(pmlmeext->cur_wireless_mode));
+	SetHwReg8192EU(padapter, HW_VAR_WIRELESS_MODE, (u8 *)&(pmlmeext->cur_wireless_mode));
 
 	if ((pmlmeext->cur_wireless_mode & WIRELESS_11B)
 		#ifdef CONFIG_P2P
@@ -3458,7 +3458,7 @@ void correct_TSF(_adapter *padapter, u8 mlme_state)
 {
 	u8 m_state = mlme_state;
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_CORRECT_TSF, (u8 *)&m_state);
+	SetHwReg8192EU(padapter, HW_VAR_CORRECT_TSF, (u8 *)&m_state);
 }
 
 #ifdef CONFIG_BCN_RECV_TIME

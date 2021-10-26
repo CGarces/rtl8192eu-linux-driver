@@ -917,7 +917,7 @@ void rtw_tdls_set_ch_sw_oper_control(_adapter *padapter, u8 enable)
 	if (atomic_read(&padapter->tdlsinfo.chsw_info.chsw_on) != enable)
 		atomic_set(&padapter->tdlsinfo.chsw_info.chsw_on, enable);
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_TDLS_BCN_EARLY_C2H_RPT, &enable);
+	SetHwReg8192EU(padapter, HW_VAR_TDLS_BCN_EARLY_C2H_RPT, &enable);
 	RTW_INFO("[TDLS] %s Bcn Early C2H Report\n", (enable == _TRUE) ? "Start" : "Stop");
 }
 

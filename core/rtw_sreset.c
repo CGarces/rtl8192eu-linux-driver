@@ -120,7 +120,7 @@ void sreset_restore_security_station(_adapter *padapter)
 #endif
 		} else
 			val8 = 0xcf;
-		rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
 	}
 
 	if ((padapter->securitypriv.dot11PrivacyAlgrthm == _TKIP_) ||
@@ -157,39 +157,39 @@ void sreset_restore_network_station(_adapter *padapter)
 				threshold = 1;
 			else
 				threshold = 0;
-			rtw_hal_set_hwreg(padapter, HW_VAR_RXDMA_AGG_PG_TH, (u8 *)(&threshold));
+			SetHwReg8192EU(padapter, HW_VAR_RXDMA_AGG_PG_TH, (u8 *)(&threshold));
 		} else {
 			threshold = 1;
-			rtw_hal_set_hwreg(padapter, HW_VAR_RXDMA_AGG_PG_TH, (u8 *)(&threshold));
+			SetHwReg8192EU(padapter, HW_VAR_RXDMA_AGG_PG_TH, (u8 *)(&threshold));
 		}
 #endif /* CONFIG_80211N_HT */
 #endif
 	}
 
 	doiqk = _TRUE;
-	rtw_hal_set_hwreg(padapter, HW_VAR_DO_IQK , &doiqk);
+	SetHwReg8192EU(padapter, HW_VAR_DO_IQK , &doiqk);
 
 	set_channel_bwmode(padapter, pmlmeext->cur_channel, pmlmeext->cur_ch_offset, pmlmeext->cur_bwmode);
 
 	doiqk = _FALSE;
-	rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
+	SetHwReg8192EU(padapter , HW_VAR_DO_IQK , &doiqk);
 	/* disable dynamic functions, such as high power, DIG */
 	/*rtw_phydm_func_disable_all(padapter);*/
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, pmlmeinfo->network.MacAddress);
+	SetHwReg8192EU(padapter, HW_VAR_BSSID, pmlmeinfo->network.MacAddress);
 
 	{
 		u8	join_type = 0;
 
 		rtw_hal_rcr_set_chk_bssid(padapter, MLME_STA_CONNECTING);
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
 	}
 
 	Set_MSR(padapter, (pmlmeinfo->state & 0x3));
 
 	mlmeext_joinbss_event_callback(padapter, 1);
 	/* restore Sequence No. */
-	rtw_hal_set_hwreg(padapter, HW_VAR_RESTORE_HW_SEQ, 0);
+	SetHwReg8192EU(padapter, HW_VAR_RESTORE_HW_SEQ, 0);
 
 	sreset_restore_security_station(padapter);
 }

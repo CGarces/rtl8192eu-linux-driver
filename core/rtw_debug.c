@@ -4546,7 +4546,7 @@ ssize_t proc_set_pattern_info(struct file *file, const char __user *buffer,
 	if (buffer && !copy_from_user(tmp, buffer, count)) {
 		if (strncmp(tmp, "clean", 5) == 0) {
 			poidparam.subcode = WOWLAN_PATTERN_CLEAN;
-			rtw_hal_set_hwreg(padapter,
+			SetHwReg8192EU(padapter,
 					  HW_VAR_WOWLAN, (u8 *)&poidparam);
 		} else {
 			index = pwrpriv->wowlan_pattern_idx;

@@ -345,8 +345,8 @@ void rtl8192e_download_rsvd_page(PADAPTER padapter, u8 mstatus)
 		rtw_write8(padapter, REG_FWHW_TXQ_CTRL + 2, RegFwHwTxQCtrl);
 
 		/* Clear beacon valid check bit. */
-		rtw_hal_set_hwreg(padapter, HW_VAR_BCN_VALID, NULL);
-		rtw_hal_set_hwreg(padapter, HW_VAR_DL_BCN_SEL, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_BCN_VALID, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_DL_BCN_SEL, NULL);
 		DLBcnCount = 0;
 		poll = 0;
 		do {
@@ -394,7 +394,7 @@ void rtl8192e_download_rsvd_page(PADAPTER padapter, u8 mstatus)
 		/* Update RSVD page location H2C to Fw. */
 		/*  */
 		if (bcn_valid) {
-			rtw_hal_set_hwreg(padapter, HW_VAR_BCN_VALID, NULL);
+			SetHwReg8192EU(padapter, HW_VAR_BCN_VALID, NULL);
 			RTW_INFO("Set RSVD page location to Fw.\n");
 			/* FillH2CCmd88E(Adapter, H2C_88E_RSVDPAGE, H2C_RSVDPAGE_LOC_LENGTH, pMgntInfo->u1RsvdPageLoc); */
 		}

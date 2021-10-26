@@ -3322,7 +3322,7 @@ void lps_ctrl_wk_hdl(_adapter *padapter, u8 lps_ctrl_type, u8 *buf)
 		mstatus = 1;/* connect */
 		/* Reset LPS Setting */
 		pwrpriv->LpsIdleCount = 0;
-		rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_JOINBSSRPT, (u8 *)(&mstatus));
+		SetHwReg8192EU(padapter, HW_VAR_H2C_FW_JOINBSSRPT, (u8 *)(&mstatus));
 #ifdef CONFIG_BT_COEXIST
 		rtw_btcoex_MediaStatusNotify(padapter, mstatus);
 #endif /* CONFIG_BT_COEXIST */
@@ -3334,7 +3334,7 @@ void lps_ctrl_wk_hdl(_adapter *padapter, u8 lps_ctrl_type, u8 *buf)
 		rtw_btcoex_MediaStatusNotify(padapter, mstatus);
 #endif /* CONFIG_BT_COEXIST */
 		LPS_Leave(padapter, "LPS_CTRL_DISCONNECT");
-		rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_JOINBSSRPT, (u8 *)(&mstatus));
+		SetHwReg8192EU(padapter, HW_VAR_H2C_FW_JOINBSSRPT, (u8 *)(&mstatus));
 		break;
 	case LPS_CTRL_SPECIAL_PACKET:
 		/* RTW_INFO("LPS_CTRL_SPECIAL_PACKET\n"); */
@@ -3456,7 +3456,7 @@ u8 rtw_lps_ctrl_leave_set_level_cmd(_adapter *adapter, u8 lps_level, u8 flags)
 
 void rtw_dm_in_lps_hdl(_adapter *padapter)
 {
-	rtw_hal_set_hwreg(padapter, HW_VAR_DM_IN_LPS_LCLK, NULL);
+	SetHwReg8192EU(padapter, HW_VAR_DM_IN_LPS_LCLK, NULL);
 }
 
 u8 rtw_dm_in_lps_wk_cmd(_adapter *padapter)
@@ -3523,7 +3523,7 @@ void rtw_lps_change_dtim_hdl(_adapter *padapter, u8 dtim)
 
 		/* RTW_INFO("change DTIM from %d to %d, ps_mode=%d\n", pwrpriv->dtim, dtim, ps_mode); */
 
-		rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
+		SetHwReg8192EU(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
 	}
 
 #ifdef CONFIG_LPS_LCLK
@@ -3579,7 +3579,7 @@ exit:
 #if (RATE_ADAPTIVE_SUPPORT == 1)
 void rpt_timer_setting_wk_hdl(_adapter *padapter, u16 minRptTime)
 {
-	rtw_hal_set_hwreg(padapter, HW_VAR_RPT_TIMER_SETTING, (u8 *)(&minRptTime));
+	SetHwReg8192EU(padapter, HW_VAR_RPT_TIMER_SETTING, (u8 *)(&minRptTime));
 }
 
 u8 rtw_rpt_timer_cfg_cmd(_adapter *padapter, u16 minRptTime)
@@ -4207,14 +4207,14 @@ cac_status_chk:
 	) {
 		u8 pause = 0x00;
 
-		rtw_hal_set_hwreg(adapter, HW_VAR_TXPAUSE, &pause);
+		SetHwReg8192EU(adapter, HW_VAR_TXPAUSE, &pause);
 		rfctl->cac_start_time = rfctl->cac_end_time = RTW_CAC_STOPPED;
 
 		if (rtw_mi_check_fwstate(adapter, WIFI_UNDER_LINKING|WIFI_SITE_MONITOR) == _FALSE) {
 			u8 doiqk = _TRUE;
 			u8 u_ch, u_bw, u_offset;
 
-			rtw_hal_set_hwreg(adapter , HW_VAR_DO_IQK , &doiqk);
+			SetHwReg8192EU(adapter , HW_VAR_DO_IQK , &doiqk);
 
 			if (rtw_mi_get_ch_setting_union(adapter, &u_ch, &u_bw, &u_offset))
 				set_channel_bwmode(adapter, u_ch, u_offset, u_bw);
@@ -4222,7 +4222,7 @@ cac_status_chk:
 				rtw_warn_on(1);
 
 			doiqk = _FALSE;
-			rtw_hal_set_hwreg(adapter , HW_VAR_DO_IQK , &doiqk);
+			SetHwReg8192EU(adapter , HW_VAR_DO_IQK , &doiqk);
 
 			ResumeTxBeacon(adapter);
 			rtw_mi_tx_beacon_hdl(adapter);
@@ -4314,7 +4314,7 @@ static void rtw_dfs_rd_enable(struct rf_ctl_t *rfctl, u8 ch, u8 bw, u8 offset, b
 			if (IS_CH_WAITING(rfctl)) {
 				u8 pause = 0xFF;
 
-				rtw_hal_set_hwreg(adapter, HW_VAR_TXPAUSE, &pause);
+				SetHwReg8192EU(adapter, HW_VAR_TXPAUSE, &pause);
 			}
 			rtw_odm_radar_detect_enable(adapter);
 		}
@@ -4348,7 +4348,7 @@ static void rtw_dfs_rd_disable(struct rf_ctl_t *rfctl, u8 ch, u8 bw, u8 offset, 
 		if (overlap_radar_detect_ch) {
 			u8 pause = 0x00;
 
-			rtw_hal_set_hwreg(adapter, HW_VAR_TXPAUSE, &pause);
+			SetHwReg8192EU(adapter, HW_VAR_TXPAUSE, &pause);
 			rtw_odm_radar_detect_disable(adapter);
 		}
 	}
@@ -5541,7 +5541,7 @@ u8 rtw_drvextra_cmd_hdl(_adapter *padapter, unsigned char *pbuf)
 		session_tracker_cmd_hdl(padapter, (struct st_cmd_parm *)pdrvextra_cmd->pbuf);
 		break;
 	case EN_HW_UPDATE_TSF_WK_CID:
-		rtw_hal_set_hwreg(padapter, HW_VAR_EN_HW_UPDATE_TSF, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_EN_HW_UPDATE_TSF, NULL);
 		break;
 	case PERIOD_TSF_UPDATE_END_WK_CID:
 		rtw_hal_periodic_tsf_update_chk(padapter);

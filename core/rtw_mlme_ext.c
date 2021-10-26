@@ -982,7 +982,7 @@ int init_hw_mlme_ext(_adapter *padapter)
 	pHalData->current_band_type = BAND_MAX;
 
 	/* set_opmode_cmd(padapter, infra_client_with_mlme); */ /* removed */
-	rtw_hal_set_hwreg(padapter, HW_VAR_ENABLE_RX_BAR, &rx_bar_enble);
+	SetHwReg8192EU(padapter, HW_VAR_ENABLE_RX_BAR, &rx_bar_enble);
 	set_channel_bwmode(padapter, pmlmeext->cur_channel, pmlmeext->cur_ch_offset, pmlmeext->cur_bwmode);
 
 	return _SUCCESS;
@@ -10664,19 +10664,19 @@ unsigned int send_beacon(_adapter *padapter)
 
 	/* RTW_INFO("%s\n", __FUNCTION__); */
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_BCN_VALID, NULL);
+	SetHwReg8192EU(padapter, HW_VAR_BCN_VALID, NULL);
 
 	/* 8192EE Port select for Beacon DL */
-	rtw_hal_set_hwreg(padapter, HW_VAR_DL_BCN_SEL, NULL);
+	SetHwReg8192EU(padapter, HW_VAR_DL_BCN_SEL, NULL);
 	#ifdef CONFIG_FW_HANDLE_TXBCN
-	rtw_hal_set_hwreg(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
+	SetHwReg8192EU(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
 	#endif
 
 	issue_beacon(padapter, 0);
 
 	#ifdef CONFIG_FW_HANDLE_TXBCN
 	vap_id = 0xFF;
-	rtw_hal_set_hwreg(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
+	SetHwReg8192EU(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
 	#endif
 
 	#ifdef RTL8814AE_SW_BCN
@@ -10717,10 +10717,10 @@ unsigned int send_beacon(_adapter *padapter)
 	#endif
 	#endif
 	{
-		rtw_hal_set_hwreg(padapter, HW_VAR_BCN_VALID, NULL);
-		rtw_hal_set_hwreg(padapter, HW_VAR_DL_BCN_SEL, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_BCN_VALID, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_DL_BCN_SEL, NULL);
 		#ifdef CONFIG_FW_HANDLE_TXBCN
-		rtw_hal_set_hwreg(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
+		SetHwReg8192EU(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
 		#endif
 		do {
 			#if defined(CONFIG_PCI_BCN_POLLING)
@@ -10744,7 +10744,7 @@ unsigned int send_beacon(_adapter *padapter)
 		} while (bxmitok == _FALSE && (issue < 100) && !RTW_CANNOT_RUN(padapter));
 		#ifdef CONFIG_FW_HANDLE_TXBCN
 		vap_id = 0xFF;
-		rtw_hal_set_hwreg(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
+		SetHwReg8192EU(padapter, HW_VAR_BCN_HEAD_SEL, &vap_id);
 		#endif
 	}
 	if (RTW_CANNOT_RUN(padapter))
@@ -11097,16 +11097,16 @@ void start_create_ibss(_adapter *padapter)
 		/* set_opmode_cmd(padapter, adhoc); */ /* removed */
 
 		val8 = 0xcf;
-		rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
 
 		doiqk = _TRUE;
-		rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
+		SetHwReg8192EU(padapter , HW_VAR_DO_IQK , &doiqk);
 
 		/* switch channel */
 		set_channel_bwmode(padapter, pmlmeext->cur_channel, HAL_PRIME_CHNL_OFFSET_DONT_CARE, CHANNEL_WIDTH_20);
 
 		doiqk = _FALSE;
-		rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
+		SetHwReg8192EU(padapter , HW_VAR_DO_IQK , &doiqk);
 
 		beacon_timing_control(padapter);
 
@@ -11120,10 +11120,10 @@ void start_create_ibss(_adapter *padapter)
 			report_join_res(padapter, -1, WLAN_STATUS_UNSPECIFIED_FAILURE);
 			pmlmeinfo->state = WIFI_FW_NULL_STATE;
 		} else {
-			rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, padapter->registrypriv.dev_network.MacAddress);
+			SetHwReg8192EU(padapter, HW_VAR_BSSID, padapter->registrypriv.dev_network.MacAddress);
 			rtw_hal_rcr_set_chk_bssid(padapter, MLME_ADHOC_STARTED);
 			join_type = 0;
-			rtw_hal_set_hwreg(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
+			SetHwReg8192EU(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
 
 			report_join_res(padapter, 1, WLAN_STATUS_SUCCESS);
 			pmlmeinfo->state |= WIFI_FW_ASSOC_SUCCESS;
@@ -11158,7 +11158,7 @@ void start_clnt_join(_adapter *padapter)
 	/* check if sta is ASIX peer and fix IOT issue if it is. */
 	if (_rtw_memcmp(get_my_bssid(&pmlmeinfo->network) , ASIX_ID , 3)) {
 		u8 iot_flag = _TRUE;
-		rtw_hal_set_hwreg(padapter, HW_VAR_ASIX_IOT, (u8 *)(&iot_flag));
+		SetHwReg8192EU(padapter, HW_VAR_ASIX_IOT, (u8 *)(&iot_flag));
 	}
 
 	if (caps & cap_ESS) {
@@ -11172,7 +11172,7 @@ void start_clnt_join(_adapter *padapter)
 			val8 = 0x4c;
 		}
 #endif
-		rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
 
 #ifdef CONFIG_DEAUTH_BEFORE_CONNECT
 		/* Because of AP's not receiving deauth before */
@@ -11236,7 +11236,7 @@ void start_clnt_join(_adapter *padapter)
 		Set_MSR(padapter, WIFI_FW_ADHOC_STATE);
 
 		val8 = 0xcf;
-		rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_SEC_CFG, (u8 *)(&val8));
 
 		beacon_timing_control(padapter);
 
@@ -12124,8 +12124,8 @@ static void rtw_mlmeext_disconnect(_adapter *padapter)
 	if (self_action == MLME_STA_DISCONNECTED)
 		correct_TSF(padapter, self_action);
 #endif
-	rtw_hal_set_hwreg(padapter, HW_VAR_MLME_DISCONNECT, 0);
-	rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, null_addr);
+	SetHwReg8192EU(padapter, HW_VAR_MLME_DISCONNECT, 0);
+	SetHwReg8192EU(padapter, HW_VAR_BSSID, null_addr);
 	if (self_action == MLME_STA_DISCONNECTED)
 		rtw_hal_rcr_set_chk_bssid(padapter, self_action);
 
@@ -12135,7 +12135,7 @@ static void rtw_mlmeext_disconnect(_adapter *padapter)
 	/* check if sta is ASIX peer and fix IOT issue if it is. */
 	if (_rtw_memcmp(get_my_bssid(&pmlmeinfo->network) , ASIX_ID , 3)) {
 		u8 iot_flag = _FALSE;
-		rtw_hal_set_hwreg(padapter, HW_VAR_ASIX_IOT, (u8 *)(&iot_flag));
+		SetHwReg8192EU(padapter, HW_VAR_ASIX_IOT, (u8 *)(&iot_flag));
 	}
 	pmlmeinfo->state = WIFI_FW_NULL_STATE;
 
@@ -12146,7 +12146,7 @@ static void rtw_mlmeext_disconnect(_adapter *padapter)
 
 	if (state_backup == WIFI_FW_STATION_STATE) {
 		if (rtw_port_switch_chk(padapter) == _TRUE) {
-			rtw_hal_set_hwreg(padapter, HW_VAR_PORT_SWITCH, NULL);
+			SetHwReg8192EU(padapter, HW_VAR_PORT_SWITCH, NULL);
 #ifdef CONFIG_LPS
 			{
 				_adapter *port0_iface = dvobj_get_port0_adapter(adapter_to_dvobj(padapter));
@@ -12166,7 +12166,7 @@ static void rtw_mlmeext_disconnect(_adapter *padapter)
 
 #ifdef CONFIG_FCS_MODE
 	if (EN_FCS(padapter))
-		rtw_hal_set_hwreg(padapter, HW_VAR_STOP_FCS_MODE, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_STOP_FCS_MODE, NULL);
 #endif
 
 	if (!(MLME_IS_STA(padapter) && MLME_IS_OPCH_SW(padapter))) {
@@ -12234,8 +12234,8 @@ void mlmeext_joinbss_event_callback(_adapter *padapter, int join_res)
 
 	if (join_res < 0) {
 		join_type = 1;
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
-		rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, null_addr);
+		SetHwReg8192EU(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
+		SetHwReg8192EU(padapter, HW_VAR_BSSID, null_addr);
 		if ((pmlmeinfo->state & 0x03) == WIFI_FW_STATION_STATE)
 			rtw_hal_rcr_set_chk_bssid(padapter, MLME_STA_DISCONNECTED);
 
@@ -12263,10 +12263,10 @@ void mlmeext_joinbss_event_callback(_adapter *padapter, int join_res)
 	rtw_set_rts_bw(padapter);
 	#endif/*CONFIG_RTS_FULL_BW*/
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_BASIC_RATE, cur_network->SupportedRates);
+	SetHwReg8192EU(padapter, HW_VAR_BASIC_RATE, cur_network->SupportedRates);
 
 	/* BCN interval */
-	rtw_hal_set_hwreg(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&pmlmeinfo->bcn_interval));
+	SetHwReg8192EU(padapter, HW_VAR_BEACON_INTERVAL, (u8 *)(&pmlmeinfo->bcn_interval));
 
 	/* udpate capability */
 	update_capinfo(padapter, pmlmeinfo->capability);
@@ -12302,10 +12302,10 @@ void mlmeext_joinbss_event_callback(_adapter *padapter, int join_res)
 #endif /* CONFIG_IOCTL_CFG80211 */
 
 	if (rtw_port_switch_chk(padapter) == _TRUE)
-		rtw_hal_set_hwreg(padapter, HW_VAR_PORT_SWITCH, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_PORT_SWITCH, NULL);
 
 	join_type = 2;
-	rtw_hal_set_hwreg(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
+	SetHwReg8192EU(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
 
 	if ((pmlmeinfo->state & 0x03) == WIFI_FW_STATION_STATE) {
 		rtw_hal_rcr_set_chk_bssid(padapter, MLME_STA_CONNECTED);
@@ -12364,7 +12364,7 @@ void mlmeext_sta_add_event_callback(_adapter *padapter, struct sta_info *psta)
 		}
 
 		join_type = 2;
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
 	}
 
 	/* update adhoc sta_info */
@@ -13680,10 +13680,10 @@ u8 setopmode_hdl(_adapter *padapter, u8 *pbuf)
 		type = _HW_STATE_NOLINK_;
 
 #ifdef CONFIG_AP_PORT_SWAP
-	rtw_hal_set_hwreg(padapter, HW_VAR_PORT_SWITCH, (u8 *)(&type));
+	SetHwReg8192EU(padapter, HW_VAR_PORT_SWITCH, (u8 *)(&type));
 #endif
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_SET_OPMODE, (u8 *)(&type));
+	SetHwReg8192EU(padapter, HW_VAR_SET_OPMODE, (u8 *)(&type));
 
 #ifdef CONFIG_AUTO_AP_MODE
 	if (psetop->mode == Ndis802_11APMode)
@@ -13691,7 +13691,7 @@ u8 setopmode_hdl(_adapter *padapter, u8 *pbuf)
 #endif
 
 	if (rtw_port_switch_chk(padapter) == _TRUE) {
-		rtw_hal_set_hwreg(padapter, HW_VAR_PORT_SWITCH, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_PORT_SWITCH, NULL);
 
 		if (psetop->mode == Ndis802_11APMode)
 			adapter_to_pwrctl(padapter)->fw_psmode_iface_id = 0xff; /* ap mode won't dowload rsvd pages */
@@ -13814,7 +13814,7 @@ u8 join_cmd_hdl(_adapter *padapter, u8 *pbuf)
 		Set_MSR(padapter, _HW_STATE_STATION_);
 
 
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_DISCONNECT, 0);
+		SetHwReg8192EU(padapter, HW_VAR_MLME_DISCONNECT, 0);
 		if (pmlmeinfo->state & WIFI_FW_STATION_STATE)
 			rtw_hal_rcr_set_chk_bssid(padapter, MLME_STA_DISCONNECTED);
 	}
@@ -13913,23 +13913,23 @@ u8 join_cmd_hdl(_adapter *padapter, u8 *pbuf)
 	/* initialgain = 0x1E; */
 	/*rtw_hal_set_odm_var(padapter, HAL_ODM_INITIAL_GAIN, &initialgain, _FALSE);*/
 
-	rtw_hal_set_hwreg(padapter, HW_VAR_BSSID, pmlmeinfo->network.MacAddress);
+	SetHwReg8192EU(padapter, HW_VAR_BSSID, pmlmeinfo->network.MacAddress);
 	if (MLME_IS_STA(padapter))
 		rtw_hal_rcr_set_chk_bssid(padapter, MLME_STA_CONNECTING);
 	else
 		rtw_hal_rcr_set_chk_bssid(padapter, MLME_ADHOC_STARTED);
 
 	join_type = 0;
-	rtw_hal_set_hwreg(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
+	SetHwReg8192EU(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
 
 	doiqk = _TRUE;
-	rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
+	SetHwReg8192EU(padapter , HW_VAR_DO_IQK , &doiqk);
 
 	set_channel_bwmode(padapter, u_ch, u_offset, u_bw);
 	rtw_mi_update_union_chan_inf(padapter, u_ch, u_offset, u_bw);
 
 	doiqk = _FALSE;
-	rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
+	SetHwReg8192EU(padapter , HW_VAR_DO_IQK , &doiqk);
 
 	/* cancel link timer */
 	_cancel_timer_ex(&pmlmeext->link_timer);
@@ -13968,7 +13968,7 @@ u8 disconnect_hdl(_adapter *padapter, unsigned char *pbuf)
 	if (((pmlmeinfo->state & 0x03) == WIFI_FW_ADHOC_STATE) || ((pmlmeinfo->state & 0x03) == WIFI_FW_AP_STATE)) {
 		/* Stop BCN */
 		val8 = 0;
-		rtw_hal_set_hwreg(padapter, HW_VAR_BCN_FUNC, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_BCN_FUNC, (u8 *)(&val8));
 	}
 #endif
 
@@ -14658,7 +14658,7 @@ void rtw_leave_opch(_adapter *adapter)
 		rfctl->offch_state = OFFCHS_LEAVING_OP;
 
 		/* clear HW TX queue */
-		rtw_hal_set_hwreg(adapter, HW_VAR_CHECK_TXBUF, 0);
+		SetHwReg8192EU(adapter, HW_VAR_CHECK_TXBUF, 0);
 
 		rtw_hal_macid_sleep_all_used(adapter);
 
@@ -14880,7 +14880,7 @@ operation_by_state:
 			rtw_rx_ampdu_apply(padapter);
 
 		/* clear HW TX queue before scan */
-		rtw_hal_set_hwreg(padapter, HW_VAR_CHECK_TXBUF, 0);
+		SetHwReg8192EU(padapter, HW_VAR_CHECK_TXBUF, 0);
 
 		rtw_hal_macid_sleep_all_used(padapter);
 
@@ -14911,7 +14911,7 @@ operation_by_state:
 		sitesurvey_set_msr(padapter, _TRUE);
 
 		val8 = 1; /* under site survey */
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 
 		mlmeext_set_scan_state(pmlmeext, SCAN_PROCESS);
 		goto operation_by_state;
@@ -15031,7 +15031,7 @@ operation_by_state:
 		sitesurvey_set_msr(padapter, _FALSE);
 
 		val8 = 0; /* survey done */
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 
 		if (mlmeext_chk_scan_backop_flags(pmlmeext, SS_BACKOP_PS_ANNC)) {
 			sitesurvey_set_igi(padapter);
@@ -15065,7 +15065,7 @@ operation_by_state:
 		 */
 
 		/* clear HW TX queue before scan */
-		rtw_hal_set_hwreg(padapter, HW_VAR_CHECK_TXBUF, 0);
+		SetHwReg8192EU(padapter, HW_VAR_CHECK_TXBUF, 0);
 
 		rtw_hal_macid_sleep_all_used(padapter);
 		if (mlmeext_chk_scan_backop_flags(pmlmeext, SS_BACKOP_PS_ANNC)
@@ -15092,7 +15092,7 @@ operation_by_state:
 		sitesurvey_set_msr(padapter, _TRUE);
 
 		val8 = 1; /* under site survey */
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 
 		mlmeext_set_scan_state(pmlmeext, SCAN_PROCESS);
 		goto operation_by_state;
@@ -15165,7 +15165,7 @@ operation_by_state:
 		sitesurvey_set_msr(padapter, _FALSE);
 
 		val8 = 0; /* survey done */
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 
 		/* turn on phy-dynamic functions */
 		rtw_phydm_ability_restore(padapter);
@@ -15288,7 +15288,7 @@ u8 setkey_hdl(_adapter *padapter, u8 *pbuf)
 
 		/* HW has problem to distinguish this group key with existing pairwise key, stop HW enc and dec for BMC */
 		rtw_camctl_set_flags(padapter, SEC_STATUS_STA_PK_GK_CONFLICT_DIS_BMC_SEARCH);
-		rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_SEC_CFG, NULL);
 
 		/* clear group key */
 		while ((camid_clr = rtw_camid_search(padapter, addr, -1, 1)) >= 0) {
@@ -15335,7 +15335,7 @@ u8 setkey_hdl(_adapter *padapter, u8 *pbuf)
 
 #ifndef CONFIG_CONCURRENT_MODE
 	if (cam_id >= 0 && cam_id <= 3)
-		rtw_hal_set_hwreg(padapter, HW_VAR_SEC_DK_CFG, (u8 *)_TRUE);
+		SetHwReg8192EU(padapter, HW_VAR_SEC_DK_CFG, (u8 *)_TRUE);
 #endif
 
 	/* 8814au should set both broadcast and unicast CAM entry for WEP key in STA mode */
@@ -15353,7 +15353,7 @@ u8 setkey_hdl(_adapter *padapter, u8 *pbuf)
 
 enable_mc:
 	/* allow multicast packets to driver */
-	rtw_hal_set_hwreg(padapter, HW_VAR_ON_RCR_AM, null_addr);
+	SetHwReg8192EU(padapter, HW_VAR_ON_RCR_AM, null_addr);
 
 	return H2C_SUCCESS;
 }
@@ -15420,7 +15420,7 @@ u8 set_stakey_hdl(_adapter *padapter, u8 *pbuf)
 
 		/* HW has problem to distinguish this pairwise key with existing group key, stop HW enc and dec for BMC */
 		rtw_camctl_set_flags(padapter, SEC_STATUS_STA_PK_GK_CONFLICT_DIS_BMC_SEARCH);
-		rtw_hal_set_hwreg(padapter, HW_VAR_SEC_CFG, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_SEC_CFG, NULL);
 
 		/* clear group key */
 		while ((camid_clr = rtw_camid_search(padapter, pparm->addr, -1, 1)) >= 0) {
@@ -16073,7 +16073,7 @@ connect_allow_hdl:
 					#endif
 						rtw_sta_flush(iface, _FALSE);
 
-					rtw_hal_set_hwreg(iface, HW_VAR_CHECK_TXBUF, 0);
+					SetHwReg8192EU(iface, HW_VAR_CHECK_TXBUF, 0);
 					set_fwstate(mlme, WIFI_OP_CH_SWITCHING);
 
 				} else if (check_fwstate(mlme, WIFI_STATION_STATE)
@@ -16348,10 +16348,10 @@ u8 tdls_hdl(_adapter *padapter, unsigned char *pbuf)
 
 		/* to collect IQK info of off-chnl */
 		doiqk = _TRUE;
-		rtw_hal_set_hwreg(padapter, HW_VAR_DO_IQK, &doiqk);
+		SetHwReg8192EU(padapter, HW_VAR_DO_IQK, &doiqk);
 		set_channel_bwmode(padapter, pchsw_info->off_ch_num, pchsw_info->ch_offset, (pchsw_info->ch_offset) ? CHANNEL_WIDTH_40 : CHANNEL_WIDTH_20);
 		doiqk = _FALSE;
-		rtw_hal_set_hwreg(padapter, HW_VAR_DO_IQK, &doiqk);
+		SetHwReg8192EU(padapter, HW_VAR_DO_IQK, &doiqk);
 
 		/* switch back to base-chnl */
 		set_channel_bwmode(padapter, pmlmeext->cur_channel, pmlmeext->cur_ch_offset, pmlmeext->cur_bwmode);

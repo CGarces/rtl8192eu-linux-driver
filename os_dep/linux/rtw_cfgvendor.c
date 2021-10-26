@@ -1596,7 +1596,7 @@ void rtw_hal_set_hw_mac_addr(PADAPTER adapter, u8 *mac_addr)
 	rtw_ps_deny(adapter, PS_DENY_IOCTL);
 	LeaveAllPowerSaveModeDirect(adapter);
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_MAC_ADDR, mac_addr);
+	SetHwReg8192EU(adapter, HW_VAR_MAC_ADDR, mac_addr);
 #ifdef CONFIG_RTW_DEBUG
 	rtw_hal_dump_macaddr(RTW_DBGDUMP, adapter);
 #endif

@@ -3408,7 +3408,7 @@ static int rtw_cfg80211_set_wpa_ie(_adapter *padapter, u8 *pie, size_t ielen)
 		|| padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)
 		/* WPS open need to enable multicast */
 		/* || check_fwstate(&padapter->mlmepriv, WIFI_UNDER_WPS) == _TRUE) */
-		rtw_hal_set_hwreg(padapter, HW_VAR_OFF_RCR_AM, null_addr);
+		SetHwReg8192EU(padapter, HW_VAR_OFF_RCR_AM, null_addr);
 
 
 exit:
@@ -5572,22 +5572,22 @@ static int	cfg80211_rtw_set_txq_params(struct wiphy *wiphy
 	switch (ac) {
 	case NL80211_TXQ_Q_VO:
 		RTW_INFO(FUNC_NDEV_FMT" AC_VO = 0x%08x\n", FUNC_ADPT_ARG(padapter), acParm);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
 		break;
 
 	case NL80211_TXQ_Q_VI:
 		RTW_INFO(FUNC_NDEV_FMT" AC_VI = 0x%08x\n", FUNC_ADPT_ARG(padapter), acParm);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
 		break;
 
 	case NL80211_TXQ_Q_BE:
 		RTW_INFO(FUNC_NDEV_FMT" AC_BE = 0x%08x\n", FUNC_ADPT_ARG(padapter), acParm);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
 		break;
 
 	case NL80211_TXQ_Q_BK:
 		RTW_INFO(FUNC_NDEV_FMT" AC_BK = 0x%08x\n", FUNC_ADPT_ARG(padapter), acParm);
-		rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
+		SetHwReg8192EU(padapter, HW_VAR_AC_PARAM_BK, (u8 *)(&acParm));
 		break;
 
 	default:

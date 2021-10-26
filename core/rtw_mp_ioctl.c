@@ -695,7 +695,7 @@ NDIS_STATUS oid_rt_pro_trigger_gpio_hdl(struct oid_par_priv *poid_par_priv)
 		return NDIS_STATUS_NOT_ACCEPTED;
 
 	_irqlevel_changed_(&oldirql, LOWER);
-	rtw_hal_set_hwreg(Adapter, HW_VAR_TRIGGER_GPIO_0, 0);
+	SetHwReg8192EU(Adapter, HW_VAR_TRIGGER_GPIO_0, 0);
 	_irqlevel_changed_(&oldirql, RAISE);
 
 

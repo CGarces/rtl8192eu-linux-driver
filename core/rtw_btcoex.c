@@ -151,7 +151,7 @@ void rtw_btcoex_MediaStatusNotify(PADAPTER padapter, u8 mediaStatus)
 
 	if ((RT_MEDIA_CONNECT == mediaStatus)
 	    && (check_fwstate(&padapter->mlmepriv, WIFI_AP_STATE) == _TRUE))
-		rtw_hal_set_hwreg(padapter, HW_VAR_DL_RSVD_PAGE, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_DL_RSVD_PAGE, NULL);
 
 	hal_btcoex_MediaStatusNotify(padapter, mediaStatus);
 }

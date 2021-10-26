@@ -656,7 +656,7 @@ static int usb_reprobe_switch_usb_mode(PADAPTER Adapter)
 	if (registry_par->switch_usb_mode == 0)
 		goto exit;
 
-	rtw_hal_set_hwreg(Adapter, HW_VAR_USB_MODE, &ret);
+	SetHwReg8192EU(Adapter, HW_VAR_USB_MODE, &ret);
 
 exit:
 	return ret;

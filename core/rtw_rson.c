@@ -498,14 +498,14 @@ void rtw_rson_scan_cmd_hdl(_adapter *padapter, int op)
 		val8 = 0x1e;
 		rtw_hal_set_odm_var(padapter, HAL_ODM_INITIAL_GAIN, &val8, _FALSE);
 		val8 = 1;
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 		issue_probereq(padapter, NULL, NULL);
 		/*	stop rson_scan after 100ms	*/
 		_set_timer(&(pmlmeext->rson_scan_timer), 100);
 	} else if  (op == RSON_SCAN_DISABLE) {
 		padapter->rtw_rson_scanstage = RSON_SCAN_DISABLE;
 		val8 = 0;
-		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
+		SetHwReg8192EU(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 		val8 = 0xff;
 		rtw_hal_set_odm_var(padapter, HAL_ODM_INITIAL_GAIN, &val8, _FALSE);
 		/*	report_surveydone_event(padapter);*/

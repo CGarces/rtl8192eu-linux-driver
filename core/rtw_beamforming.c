@@ -1437,7 +1437,7 @@ static void _beamforming_enter(PADAPTER adapter, void *p)
 	if (!bfer && !bfee)
 		return;
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_ENTER, (u8*)sta);
+	SetHwReg8192EU(adapter, HW_VAR_SOUNDING_ENTER, (u8*)sta);
 
 	/* Perform sounding if there is BFee */
 	if ((info->beamformee_su_cnt != 0)
@@ -1481,7 +1481,7 @@ static void _beamforming_leave(PADAPTER adapter, u8 *ra)
 	if (bfee)
 		_bfee_remove_entry(adapter, bfee);
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_LEAVE, ra);
+	SetHwReg8192EU(adapter, HW_VAR_SOUNDING_LEAVE, ra);
 
 	/* Stop sounding if there is no any BFee */
 	if ((info->beamformee_su_cnt == 0)
@@ -1510,7 +1510,7 @@ static void _beamforming_sounding_down(PADAPTER adapter, u8 status)
 		sounding->state = SOUNDING_STATE_MU_SOUNDDOWN;
 		RTW_INFO("%s: Set to SOUNDING_STATE_MU_SOUNDDOWN\n", __FUNCTION__);
 		info->SetHalSoundownOnDemandCnt++;
-		rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_STATUS, &status);
+		SetHwReg8192EU(adapter, HW_VAR_SOUNDING_STATUS, &status);
 	} else if (sounding->state == SOUNDING_STATE_SU_START) {
 		RTW_INFO("%s: SU entry[%d] sounding down\n", __FUNCTION__, sounding->su_bfee_curidx);
 		bfee = &info->bfee_entry[sounding->su_bfee_curidx];
@@ -1533,10 +1533,10 @@ static void _beamforming_sounding_down(PADAPTER adapter, u8 status)
 			/* success */
 			bfee->LogStatusFailCnt = 0;
 			info->SetHalSoundownOnDemandCnt++;
-			rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_STATUS, &status);
+			SetHwReg8192EU(adapter, HW_VAR_SOUNDING_STATUS, &status);
 		} else if (_TRUE == bfee->bDeleteSounding) {
 			RTW_WARN("%s: Delete entry[%d] sounding info!\n", __FUNCTION__, sounding->su_bfee_curidx);
-			rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_STATUS, &status);
+			SetHwReg8192EU(adapter, HW_VAR_SOUNDING_STATUS, &status);
 			bfee->bDeleteSounding = _FALSE;
 		} else {
 			bfee->LogStatusFailCnt++;
@@ -1831,11 +1831,11 @@ void rtw_bf_cmd_hdl(PADAPTER adapter, u8 type, u8 *pbuf)
 		break;
 
 	case BEAMFORMING_CTRL_SET_GID_TABLE:
-		rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_SET_GID_TABLE, pbuf);
+		SetHwReg8192EU(adapter, HW_VAR_SOUNDING_SET_GID_TABLE, pbuf);
 		break;
 
 	case BEAMFORMING_CTRL_SET_CSI_REPORT:
-		rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_CSI_REPORT, pbuf);
+		SetHwReg8192EU(adapter, HW_VAR_SOUNDING_CSI_REPORT, pbuf);
 		break;
 
 	default:
@@ -2126,7 +2126,7 @@ void	beamforming_dym_ndpa_rate(PADAPTER adapter)
 
 	/* BW = CHANNEL_WIDTH_20; */
 	NDPARate = NDPARate << 8;
-	rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_RATE, (u8 *)&NDPARate);
+	SetHwReg8192EU(adapter, HW_VAR_SOUNDING_RATE, (u8 *)&NDPARate);
 }
 
 void beamforming_dym_period(PADAPTER Adapter)
@@ -2169,7 +2169,7 @@ void beamforming_dym_period(PADAPTER Adapter)
 	}
 
 	if (bChangePeriod)
-		rtw_hal_set_hwreg(Adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&Idx);
+		SetHwReg8192EU(Adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&Idx);
 }
 
 BOOLEAN	issue_ht_sw_ndpa_packet(PADAPTER Adapter, u8 *ra, enum channel_width bw, u8 qidx)
@@ -2614,7 +2614,7 @@ BOOLEAN	beamforming_start_fw(PADAPTER adapter, u8 idx)
 
 	pEntry->beamforming_entry_state = BEAMFORMING_ENTRY_STATE_PROGRESSING;
 	pEntry->bSound = _TRUE;
-	rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&idx);
+	SetHwReg8192EU(adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&idx);
 
 	return _TRUE;
 }
@@ -2623,7 +2623,7 @@ void	beamforming_end_fw(PADAPTER adapter)
 {
 	u8	idx = 0;
 
-	rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&idx);
+	SetHwReg8192EU(adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&idx);
 
 	RTW_INFO("%s\n", __FUNCTION__);
 }
@@ -2792,7 +2792,7 @@ void	beamforming_deinit_entry(PADAPTER adapter, u8 *ra)
 	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
 
 	if (beamforming_remove_entry(pmlmepriv, ra, &idx) == _TRUE)
-		rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_LEAVE, (u8 *)&idx);
+		SetHwReg8192EU(adapter, HW_VAR_SOUNDING_LEAVE, (u8 *)&idx);
 
 	RTW_INFO("%s Idx %d\n", __FUNCTION__, idx);
 }
@@ -2808,7 +2808,7 @@ void	beamforming_reset(PADAPTER adapter)
 			pBeamInfo->beamforming_entry[idx].bUsed = _FALSE;
 			pBeamInfo->beamforming_entry[idx].beamforming_entry_cap = BEAMFORMING_CAP_NONE;
 			pBeamInfo->beamforming_entry[idx].beamforming_entry_state = BEAMFORMING_ENTRY_STATE_UNINITIALIZE;
-			rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_LEAVE, (u8 *)&idx);
+			SetHwReg8192EU(adapter, HW_VAR_SOUNDING_LEAVE, (u8 *)&idx);
 		}
 	}
 
@@ -2822,7 +2822,7 @@ void beamforming_sounding_fail(PADAPTER Adapter)
 	struct beamforming_entry	*pEntry = &(pBeamInfo->beamforming_entry[pBeamInfo->beamforming_cur_idx]);
 
 	pEntry->bSound = _FALSE;
-	rtw_hal_set_hwreg(Adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&pBeamInfo->beamforming_cur_idx);
+	SetHwReg8192EU(Adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&pBeamInfo->beamforming_cur_idx);
 	beamforming_deinit_entry(Adapter, pEntry->mac_addr);
 }
 
@@ -2841,7 +2841,7 @@ void	beamforming_check_sounding_success(PADAPTER Adapter, BOOLEAN status)
 	if (pEntry->LogStatusFailCnt > 20) {
 		RTW_INFO("%s LogStatusFailCnt > 20, Stop SOUNDING\n", __FUNCTION__);
 		/* pEntry->bSound = _FALSE; */
-		/* rtw_hal_set_hwreg(Adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&pBeamInfo->beamforming_cur_idx); */
+		/* SetHwReg8192EU(Adapter, HW_VAR_SOUNDING_FW_NDPA, (u8 *)&pBeamInfo->beamforming_cur_idx); */
 		/* beamforming_deinit_entry(Adapter, pEntry->mac_addr); */
 		beamforming_wk_cmd(Adapter, BEAMFORMING_CTRL_SOUNDING_FAIL, NULL, 0, 1);
 	}
@@ -2852,7 +2852,7 @@ void	beamforming_enter(PADAPTER adapter, PVOID psta)
 	u8	idx = 0xff;
 
 	if (beamforming_init_entry(adapter, (struct sta_info *)psta, &idx))
-		rtw_hal_set_hwreg(adapter, HW_VAR_SOUNDING_ENTER, (u8 *)&idx);
+		SetHwReg8192EU(adapter, HW_VAR_SOUNDING_ENTER, (u8 *)&idx);
 
 	/* RTW_INFO("%s Idx %d\n", __FUNCTION__, idx); */
 }
@@ -3072,7 +3072,7 @@ void	beamforming_wk_hdl(_adapter *padapter, u8 type, u8 *pbuf)
 		break;
 
 	case BEAMFORMING_CTRL_SOUNDING_CLK:
-		rtw_hal_set_hwreg(padapter, HW_VAR_SOUNDING_CLK, NULL);
+		SetHwReg8192EU(padapter, HW_VAR_SOUNDING_CLK, NULL);
 		break;
 
 	default:

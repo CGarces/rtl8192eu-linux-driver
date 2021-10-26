@@ -687,7 +687,7 @@ void rtw_hal_turbo_edca(_adapter *adapter)
 
 			if ( edca_param != hal_data->ac_param_be) {
 				
-				rtw_hal_set_hwreg(adapter, HW_VAR_AC_PARAM_BE, (u8 *)(&edca_param));
+				SetHwReg8192EU(adapter, HW_VAR_AC_PARAM_BE, (u8 *)(&edca_param));
 
 				RTW_INFO("Turbo EDCA =0x%x\n", edca_param);
 			}
@@ -703,7 +703,7 @@ void rtw_hal_turbo_edca(_adapter *adapter)
 		/*  */
 		if (hal_data->is_turbo_edca) {
 			edca_param = hal_data->ac_param_be;
-			rtw_hal_set_hwreg(adapter, HW_VAR_AC_PARAM_BE, (u8 *)(&edca_param));
+			SetHwReg8192EU(adapter, HW_VAR_AC_PARAM_BE, (u8 *)(&edca_param));
 			hal_data->is_turbo_edca = _FALSE;
 		}
 	}
@@ -1399,7 +1399,7 @@ void rtw_dyn_soml_config(_adapter *adapter)
 
 	if (adapter->registrypriv.dyn_soml_en == 1) {
 		/* Must after phydm_adaptive_soml_init() */
-		rtw_hal_set_hwreg(adapter , HW_VAR_SET_SOML_PARAM , NULL);
+		SetHwReg8192EU(adapter , HW_VAR_SET_SOML_PARAM , NULL);
 		RTW_INFO("dyn_soml_en = 1\n");
 	} else {
 		if (adapter->registrypriv.dyn_soml_en == 2) {

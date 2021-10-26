@@ -1099,7 +1099,7 @@ void phydm_set_hw_reg_handler_interface(struct dm_struct *dm, u8 RegName,
 #if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
 	((PADAPTER)adapter)->HalFunc.SetHwRegHandler(adapter, RegName, val);
 #else
-	adapter->hal_func.set_hw_reg_handler(adapter, RegName, val);
+	SetHwReg8192EU(adapter, RegName, val);
 #endif
 
 #endif

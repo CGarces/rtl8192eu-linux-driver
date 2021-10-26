@@ -662,7 +662,7 @@ static int rm_state_do_meas(struct rm_obj *prm, enum RM_EV_ID evid)
 			switch (prm->q.m_type) {
 			case bcn_req:
 				val8 = 1; /* Enable free run counter */
-				rtw_hal_set_hwreg(padapter,
+				SetHwReg8192EU(padapter,
 					HW_VAR_FREECNT, &val8);
 				rm_sitesurvey(prm);
 				break;
@@ -745,7 +745,7 @@ static int rm_state_do_meas(struct rm_obj *prm, enum RM_EV_ID evid)
 								, rtw_hal_get_port(padapter));
 
 		val8 = 0; /* Disable free run counter */
-		rtw_hal_set_hwreg(padapter, HW_VAR_FREECNT, &val8);
+		SetHwReg8192EU(padapter, HW_VAR_FREECNT, &val8);
 		break;
 	default:
 		break;
