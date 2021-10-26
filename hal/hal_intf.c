@@ -396,7 +396,7 @@ uint rtw_hal_deinit(_adapter *padapter)
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 	int i;
 
-	status = padapter->hal_func.hal_deinit(padapter);
+	status = rtl8192eu_hal_deinit(padapter);
 
 	if (status == _SUCCESS) {
 		rtw_led_control(padapter, LED_CTL_POWER_OFF);
@@ -1416,11 +1416,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		rtw_hal_error_msg("hal_power_off");
 		ret = _FAIL;
 	}
-	if (NULL == padapter->hal_func.hal_deinit) {
-		rtw_hal_error_msg("hal_deinit");
-		ret = _FAIL;
-	}
-
 	/*** xmit section ***/
 	if (NULL == padapter->hal_func.init_xmit_priv) {
 		rtw_hal_error_msg("init_xmit_priv");

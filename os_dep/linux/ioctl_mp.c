@@ -1595,7 +1595,7 @@ int rtw_mp_mon(struct net_device *dev,
 		pmp_priv->rx_bindicatePkt = _FALSE;
 		pmp_priv->bRTWSmbCfg = _FALSE;
 		padapter->registrypriv.mp_mode = 1;
-		pHalFunc->hal_deinit(padapter);
+		rtl8192eu_hal_deinit(padapter);
 		padapter->registrypriv.mp_mode = 0;
 		rtl8192eu_hal_init(padapter);
 		/*rtw_disassoc_cmd(padapter, 0, 0);*/
@@ -2576,7 +2576,7 @@ int rtw_mp_SetBT(struct net_device *dev,
 		rtw_btcoex_Initialize(padapter);
 #endif
 		pHalFunc->read_adapter_info(padapter);
-		pHalFunc->hal_deinit(padapter);
+		rtl8192eu_hal_deinit(padapter);
 		rtl8192eu_hal_init(padapter);
 		rtw_pm_set_ips(padapter, IPS_NONE);
 		LeaveAllPowerSaveMode(padapter);

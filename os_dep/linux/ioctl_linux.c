@@ -9440,7 +9440,7 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 #else
 		SetHwReg8192EU(padapter, HW_VAR_MAC_ADDR, adapter_mac_addr(padapter)); /* set mac addr to mac register */
 #endif
-		/*pHalFunc->hal_deinit(padapter);*/
+		/*rtl8192eu_hal_deinit(padapter);*/
 		if (rtl8192eu_hal_init(padapter) == _FAIL) {
 			err = -EINVAL;
 			goto exit;
