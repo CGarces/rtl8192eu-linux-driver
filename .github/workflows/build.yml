@@ -1,6 +1,6 @@
 name: Build
 
-on: [pull_request]
+on: push
 
 jobs:
 
@@ -28,9 +28,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-        kernel_version: ${{fromJson(needs.commontasks.outputs.matrix)}}
-        gcc_version: [9, 10, 12]
-        # kernel_version: [6.1-rc1]
+        #kernel_version: ${{fromJson(needs.commontasks.outputs.matrix)}}
+        gcc_version: [12]
+        kernel_version: [6.1-rc1]
     steps:
     - name: Check Versions
       id: check_version
@@ -65,6 +65,8 @@ jobs:
       run: sudo dpkg --force-all -i *.deb
     - uses: actions/checkout@v2
       if: steps.check_version.outputs.skip_build == 'False'
+    - name: Ccache for gh actions
+      uses: hendrikmuhs/ccache-action@v1.2.3
     - name: build kernel ${{ matrix.kernel_version }} - GCC ${{ matrix.gcc_version }}
       if: steps.check_version.outputs.skip_build == 'False'
-      run: make KVER=$KVER CC=cc
+      run: make KVER=$KVER CC="ccache cc"
